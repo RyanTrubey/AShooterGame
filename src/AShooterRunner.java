@@ -6,9 +6,13 @@ static int fHeight = 720;
 JFrame frame;
 GamePanel panel;
 public static void main(String[] args) {
-	new AShooterRunner();
+	AShooterRunner idk = new AShooterRunner();
+	idk.setup();
 }
 public AShooterRunner() {
+
+}
+public void setup() {
 	panel = new GamePanel();
 	frame = new JFrame();
 	frame.setTitle("AShooterGame");
@@ -16,6 +20,8 @@ public AShooterRunner() {
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	frame.setVisible(true);
 	frame.setSize(fWidth, fHeight);
+	panel.startGame();
+	frame.addKeyListener(panel);
 }
 
 }
