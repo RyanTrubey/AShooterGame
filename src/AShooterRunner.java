@@ -1,6 +1,9 @@
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import javax.swing.JFrame;
 
-public class AShooterRunner {
+public class AShooterRunner{
 static int fWidth = 1280;
 static int fHeight = 720;
 JFrame frame;
@@ -22,6 +25,6 @@ public void setup() {
 	frame.setSize(fWidth, fHeight);
 	panel.startGame();
 	frame.addKeyListener(panel);
+	frame.addMouseListener(panel);
 }
-
 }
