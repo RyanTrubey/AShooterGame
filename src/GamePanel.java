@@ -30,10 +30,18 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	static int backX = 50;
 	static int backY = AShooterRunner.fHeight - 225;
 	static int backW = startW - 100;
-	int adjustment = 25;
+	static int adjustment = 25;
 	int currentstate = menustate;
+	int spawnTime = 120;
+	int timerTick = 0;
+	int teamX = AShooterRunner.fWidth/2-150;
+	int teamY = AShooterRunner.fHeight/2-50;
+	
 	ObjectManager om;
 	Random r = new Random();
+	static final int human = 1;
+	static final int alien = 2;
+	static int team = alien;
 	Font textfont = new Font("Impact", Font.PLAIN, 40);
 
 	public void paintComponent(Graphics g) {
@@ -52,12 +60,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		addKeyListener(this);
 		timer = new Timer(1000 / 60, this);
 		om = new ObjectManager();
-		for(int i = 0; i < 10; i++) {
-		Alien a = new Alien(AShooterRunner.fWidth-100, r.nextInt(AShooterRunner.fHeight-adjustment-20)+adjustment);
-		om.addAlien(a);
-		}
 	}
-	
+
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
@@ -82,7 +86,15 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		timerTick++;
+		if (timerTick % spawnTime == 0) {
+			if (currentstate == gamestate) {
+				om.spawn();
+			}
+		}
+		if(currentstate != gamestate) {
+			om.clear();
+		}
 		repaint();
 	}
 
@@ -110,6 +122,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		g.setColor(new Color(100, 0, 125));
 		g.fillRect(AShooterRunner.fWidth - AShooterRunner.fWidth / 8, 0, AShooterRunner.fWidth / 8,
 				AShooterRunner.fHeight);
+		om.update();
 		om.draw(g);
 	}
 
@@ -126,6 +139,15 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		g.setColor(Color.black);
 		g.setFont(textfont);
 		g.drawString("Back", backX + backW / 2 - 40, backY + startH / 2 + 15);
+		g.setColor(Color.gray);
+		g.fillRect(teamX, teamY, 300, 50);
+		if(team == alien) {
+			g.setColor(Color.black);
+			g.drawString("Team Alien", AShooterRunner.fWidth/2-90, AShooterRunner.fHeight/2-10);
+		} else if(team == human) {
+			g.setColor(Color.black);
+			g.drawString("Team Human", AShooterRunner.fWidth/2-90, AShooterRunner.fHeight/2-10);
+		}
 	}
 
 	@Override
@@ -142,9 +164,14 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 			}
 		}
 		if (currentstate == optionstate) {
-			if (e.getX() > backX && e.getX() < backX + backW && e.getY() > backY + adjustment
-					&& e.getY() < backY + startH + adjustment) {
+			if (e.getX() > backX && e.getX() < backX + backW && e.getY() > backY + adjustment && e.getY() < backY + startH + adjustment) {
 				currentstate = menustate;
+			} else if(e.getX() > teamX && e.getX() < teamX+300 && e.getY() > teamY + adjustment && e.getY() < teamY+50+adjustment) {
+				if(team == 1) {
+					team = alien;
+				} else {
+					team = human;
+				}
 			}
 		}
 	}
