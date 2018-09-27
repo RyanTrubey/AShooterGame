@@ -1,6 +1,5 @@
 /AShooterRunner.class
-/Alien.class
+/Enemy.class
 /GamePanel.class
 /ObjectManager.class
-/Humans.class
-/Enemy.class
+/Player.class

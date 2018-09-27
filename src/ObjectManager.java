@@ -6,7 +6,7 @@ import java.util.Random;
 public class ObjectManager {
 	ArrayList<Enemy> eList = new ArrayList<Enemy>();
 	int enemyNumber = 10;
-
+	Player player;
 	public void addEnemy(Enemy e) {
 		eList.add(e);
 	}
@@ -15,12 +15,14 @@ public class ObjectManager {
 		for (Enemy a : eList) {
 			a.drawEnemy(g);
 		}
+		player.drawPlayer(g);
 	}
 
 	public void update() {
 		for (Enemy a : eList) {
 			a.update();
 		}
+		
 	}
 
 	public void spawn() {
@@ -41,5 +43,22 @@ public class ObjectManager {
 	}
 	public void clear() {
 		eList.clear();
+	}
+	public void addPlayer(Player player) {
+		this.player = player;
+	}
+	public void movePlayer(String direction) {
+		if(direction.equals("up")) {
+			player.y-=5;
+		}
+		if(direction.equals("down")) {
+			player.y+=5;
+		}
+		if(direction.equals("left")) {
+			player.x-=5;
+		}
+		if(direction.equals("right")) {
+			player.x+=5;
+		}
 	}
 }

@@ -34,15 +34,18 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	int currentstate = menustate;
 	int spawnTime = 120;
 	int timerTick = 0;
-	int teamX = AShooterRunner.fWidth/2-150;
-	int teamY = AShooterRunner.fHeight/2-50;
-	
+	int teamX = AShooterRunner.fWidth / 2 - 150;
+	int teamY = AShooterRunner.fHeight / 2 - 50;
 	ObjectManager om;
 	Random r = new Random();
 	static final int human = 1;
 	static final int alien = 2;
-	static int team = alien;
+	static int team = human;
 	Font textfont = new Font("Impact", Font.PLAIN, 40);
+	boolean up;
+	boolean down;
+	boolean left;
+	boolean right;
 
 	public void paintComponent(Graphics g) {
 		if (currentstate == menustate) {
@@ -71,17 +74,41 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-		if (e.getKeyCode() == KeyEvent.VK_ENTER && currentstate != 3) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER && currentstate != optionstate) {
 			currentstate++;
-		} else if (currentstate == 3) {
+		} else if (e.getKeyCode() == KeyEvent.VK_ENTER && currentstate == optionstate) {
 			currentstate = menustate;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_W && currentstate == gamestate) {
+			up=true;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_S && currentstate == gamestate) {
+			down=true;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_A && currentstate == gamestate) {
+			left=true;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_D && currentstate == gamestate) {
+			right=true;
 		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-
+		if(e.getKeyCode() == KeyEvent.VK_W && currentstate == gamestate) {
+			up=false;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_S && currentstate == gamestate) {
+			down=false;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_A && currentstate == gamestate) {
+			left=false;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_D && currentstate == gamestate) {
+			right=false;
+		}
+		
 	}
 
 	@Override
@@ -92,10 +119,22 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 				om.spawn();
 			}
 		}
-		if(currentstate != gamestate) {
+		if (currentstate != gamestate) {
 			om.clear();
 		}
 		repaint();
+		if(up == true) {
+			om.movePlayer("up");
+		}
+		if(down == true) {
+			om.movePlayer("down");
+		}
+		if(left == true) {
+			om.movePlayer("left");
+		}
+		if(right == true) {
+			om.movePlayer("right");
+		}
 	}
 
 	public void startGame() {
@@ -141,12 +180,12 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		g.drawString("Back", backX + backW / 2 - 40, backY + startH / 2 + 15);
 		g.setColor(Color.gray);
 		g.fillRect(teamX, teamY, 300, 50);
-		if(team == alien) {
+		if (team == alien) {
 			g.setColor(Color.black);
-			g.drawString("Team Alien", AShooterRunner.fWidth/2-90, AShooterRunner.fHeight/2-10);
-		} else if(team == human) {
+			g.drawString("Team Alien", AShooterRunner.fWidth / 2 - 90, AShooterRunner.fHeight / 2 - 10);
+		} else if (team == human) {
 			g.setColor(Color.black);
-			g.drawString("Team Human", AShooterRunner.fWidth/2-90, AShooterRunner.fHeight/2-10);
+			g.drawString("Team Human", AShooterRunner.fWidth / 2 - 90, AShooterRunner.fHeight / 2 - 10);
 		}
 	}
 
@@ -158,16 +197,27 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 					&& e.getY() < startY + GamePanel.startH + adjustment) {
 				currentstate = gamestate;
 			}
+			if (team == human) {
+				Player player = new Player(25, AShooterRunner.fHeight / 2 - 50, human);
+				om.addPlayer(player);
+			} else {
+				Player player = new Player(AShooterRunner.fWidth - 75, AShooterRunner.fHeight / 2 - 50, alien);
+				om.addPlayer(player);
+			}
+
 			if (e.getX() > optX && e.getX() < optX + optW && e.getY() > optY + adjustment
 					&& e.getY() < optY + optH + adjustment) {
 				currentstate = optionstate;
 			}
-		}
-		if (currentstate == optionstate) {
-			if (e.getX() > backX && e.getX() < backX + backW && e.getY() > backY + adjustment && e.getY() < backY + startH + adjustment) {
+		}else if (currentstate == optionstate) {
+			if (e.getX() > backX && e.getX() < backX + backW && e.getY() > backY + adjustment
+					&& e.getY() < backY + startH + adjustment) {
 				currentstate = menustate;
-			} else if(e.getX() > teamX && e.getX() < teamX+300 && e.getY() > teamY + adjustment && e.getY() < teamY+50+adjustment) {
-				if(team == 1) {
+				System.out.println(team);
+			} else if (e.getX() > teamX && e.getX() < teamX + 300 && e.getY() > teamY + adjustment
+					&& e.getY() < teamY + 50 + adjustment) {
+				System.out.println("Something" + team);
+				if (team == human) {
 					team = alien;
 				} else {
 					team = human;
@@ -185,13 +235,13 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
