@@ -46,6 +46,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	boolean down;
 	boolean left;
 	boolean right;
+	int projX;
+	int projY;
 
 	public void paintComponent(Graphics g) {
 		if (currentstate == menustate) {
@@ -79,60 +81,59 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		} else if (e.getKeyCode() == KeyEvent.VK_ENTER && currentstate == optionstate) {
 			currentstate = menustate;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_W && currentstate == gamestate) {
-			up=true;
+		if (e.getKeyCode() == KeyEvent.VK_W && currentstate == gamestate) {
+			up = true;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_S && currentstate == gamestate) {
-			down=true;
+		if (e.getKeyCode() == KeyEvent.VK_S && currentstate == gamestate) {
+			down = true;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_A && currentstate == gamestate) {
-			left=true;
+		if (e.getKeyCode() == KeyEvent.VK_A && currentstate == gamestate) {
+			left = true;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_D && currentstate == gamestate) {
-			right=true;
+		if (e.getKeyCode() == KeyEvent.VK_D && currentstate == gamestate) {
+			right = true;
 		}
+
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getKeyCode() == KeyEvent.VK_W && currentstate == gamestate) {
-			up=false;
+		if (e.getKeyCode() == KeyEvent.VK_W && currentstate == gamestate) {
+			up = false;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_S && currentstate == gamestate) {
-			down=false;
+		if (e.getKeyCode() == KeyEvent.VK_S && currentstate == gamestate) {
+			down = false;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_A && currentstate == gamestate) {
-			left=false;
+		if (e.getKeyCode() == KeyEvent.VK_A && currentstate == gamestate) {
+			left = false;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_D && currentstate == gamestate) {
-			right=false;
+		if (e.getKeyCode() == KeyEvent.VK_D && currentstate == gamestate) {
+			right = false;
 		}
-		
+
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		timerTick++;
-		if (timerTick % spawnTime == 0) {
-			if (currentstate == gamestate) {
-				om.spawn();
-			}
+		if (timerTick % spawnTime == 0 && currentstate == gamestate) {
+			om.spawn();
 		}
 		if (currentstate != gamestate) {
 			om.clear();
 		}
 		repaint();
-		if(up == true) {
+		if (up == true) {
 			om.movePlayer("up");
 		}
-		if(down == true) {
+		if (down == true) {
 			om.movePlayer("down");
 		}
-		if(left == true) {
+		if (left == true) {
 			om.movePlayer("left");
 		}
-		if(right == true) {
+		if (right == true) {
 			om.movePlayer("right");
 		}
 	}
@@ -196,20 +197,19 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 			if (e.getX() > startX && e.getX() < startX + startW && e.getY() > startY + adjustment
 					&& e.getY() < startY + GamePanel.startH + adjustment) {
 				currentstate = gamestate;
+				if (team == human) {
+					Player player = new Player(25, AShooterRunner.fHeight / 2 - 50, human);
+					om.addPlayer(player);
+				} else {
+					Player player = new Player(AShooterRunner.fWidth - 75, AShooterRunner.fHeight / 2 - 50, alien);
+					om.addPlayer(player);
+				}
 			}
-			if (team == human) {
-				Player player = new Player(25, AShooterRunner.fHeight / 2 - 50, human);
-				om.addPlayer(player);
-			} else {
-				Player player = new Player(AShooterRunner.fWidth - 75, AShooterRunner.fHeight / 2 - 50, alien);
-				om.addPlayer(player);
-			}
-
 			if (e.getX() > optX && e.getX() < optX + optW && e.getY() > optY + adjustment
 					&& e.getY() < optY + optH + adjustment) {
 				currentstate = optionstate;
 			}
-		}else if (currentstate == optionstate) {
+		} else if (currentstate == optionstate) {
 			if (e.getX() > backX && e.getX() < backX + backW && e.getY() > backY + adjustment
 					&& e.getY() < backY + startH + adjustment) {
 				currentstate = menustate;
@@ -221,6 +221,12 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 					team = alien;
 				} else {
 					team = human;
+				}
+			}
+		} else if (currentstate == gamestate) {
+			if (timerTick % 60 == 0) {
+				if (team == human) {
+
 				}
 			}
 		}
@@ -235,13 +241,13 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

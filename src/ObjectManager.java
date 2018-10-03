@@ -5,15 +5,24 @@ import java.util.Random;
 
 public class ObjectManager {
 	ArrayList<Enemy> eList = new ArrayList<Enemy>();
+	ArrayList<Projectile> pList = new ArrayList<Projectile>();
 	int enemyNumber = 10;
 	Player player;
+
 	public void addEnemy(Enemy e) {
 		eList.add(e);
 	}
-	
+
+	public void addProjectile(Projectile p) {
+		pList.add(p);
+	}
+
 	public void draw(Graphics g) {
 		for (Enemy a : eList) {
 			a.drawEnemy(g);
+		}
+		for (Projectile p : pList) {
+			p.drawProjectile(g);
 		}
 		player.drawPlayer(g);
 	}
@@ -22,7 +31,9 @@ public class ObjectManager {
 		for (Enemy a : eList) {
 			a.update();
 		}
-		
+		for (Projectile p : pList) {
+			p.update();
+		}
 	}
 
 	public void spawn() {
@@ -41,24 +52,27 @@ public class ObjectManager {
 		}
 
 	}
+
 	public void clear() {
 		eList.clear();
 	}
+
 	public void addPlayer(Player player) {
 		this.player = player;
 	}
+
 	public void movePlayer(String direction) {
-		if(direction.equals("up")) {
-			player.y-=5;
+		if (direction.equals("up")) {
+			player.y -= 5;
 		}
-		if(direction.equals("down")) {
-			player.y+=5;
+		if (direction.equals("down")) {
+			player.y += 5;
 		}
-		if(direction.equals("left")) {
-			player.x-=5;
+		if (direction.equals("left")) {
+			player.x -= 5;
 		}
-		if(direction.equals("right")) {
-			player.x+=5;
+		if (direction.equals("right")) {
+			player.x += 5;
 		}
 	}
 }

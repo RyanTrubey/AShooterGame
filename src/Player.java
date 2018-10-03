@@ -19,4 +19,10 @@ public void drawPlayer(Graphics g) {
 		g.fillRect(x, y, 50, 50);
 	}
 }
+public int getX() {
+	return x;
+}
+public int getY() {
+	return y;
+}
 }
