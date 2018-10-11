@@ -68,11 +68,52 @@ public class ObjectManager {
 		if (direction.equals("down")) {
 			player.y += 5;
 		}
-		if (direction.equals("left")) {
+		if (direction.equals("left") && player.x > 0) {
 			player.x -= 5;
 		}
-		if (direction.equals("right")) {
+		if (direction.equals("right") && player.x < AShooterRunner.fWidth-50) {
 			player.x += 5;
 		}
+		player.updateColBox();
+	}
+
+	public void createProjectile() {
+		if (GamePanel.team == GamePanel.human) {
+			Projectile projectile = new Projectile(player.x + 50, player.y + 25, "human");
+			pList.add(projectile);
+		} else if (GamePanel.team == GamePanel.alien) {
+			Projectile projectile = new Projectile(player.x - 20, player.y + 25, "alien");
+			pList.add(projectile);
+		}
+	}
+
+	public void checkCollision() {
+		for (Projectile p : pList) {
+			for (Enemy e : eList) {
+				if (p.colBox.intersects(e.colBox)) {
+					e.isAlive = false;
+					p.isAlive = false;
+				}
+			}
+		}
+		for (Enemy e : eList) {
+			if(e.colBox.intersects(player.colBox)) {
+				player.isAlive = false;
+				e.isAlive = false;
+			}
+		}
+	}
+	public void cleanObjects() {
+		for(int i = 0; i < pList.size(); i++) {
+			if(pList.get(i).isAlive == false) {
+				pList.remove(pList.get(i));
+			}
+		}
+		for(int i = 0; i < eList.size(); i++) {
+			if(eList.get(i).isAlive == false) {
+				eList.remove(eList.get(i));
+			}
+		}
+		
 	}
 }

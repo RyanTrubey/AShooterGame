@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.util.Random;
 
 public class Enemy {
@@ -7,11 +8,14 @@ int x;
 int y;
 int direction;
 Color color;
+Rectangle colBox;
+Boolean isAlive = true;
 public Enemy(int x, int y, int direction, Color color) {
 	this.x = x;
 	this.y = y;
 	this.direction = direction;
 	this.color = color;
+	colBox = new Rectangle(x, y, 20, 20);
 }
 public void update() {
 	x+=direction;
@@ -28,6 +32,7 @@ public void update() {
 			y = r.nextInt(AShooterRunner.fHeight - 50);
 		}
 	}
+	colBox.setBounds(x, y, 20, 20);
 }
 public void drawEnemy(Graphics g) {
 	g.setColor(color);

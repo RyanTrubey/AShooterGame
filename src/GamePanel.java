@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Date;
 import java.util.Random;
 
 import javax.swing.JButton;
@@ -48,6 +49,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	boolean right;
 	int projX;
 	int projY;
+	Date projectileTime = new Date();
+	int shootTime = 250;
 
 	public void paintComponent(Graphics g) {
 		if (currentstate == menustate) {
@@ -136,6 +139,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		if (right == true) {
 			om.movePlayer("right");
 		}
+		om.checkCollision();
+		om.cleanObjects();
 	}
 
 	public void startGame() {
@@ -224,10 +229,10 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 				}
 			}
 		} else if (currentstate == gamestate) {
-			if (timerTick % 60 == 0) {
-				if (team == human) {
-
-				}
+			Date currentTime = new Date();
+			if(currentTime.getTime() - projectileTime.getTime() >= shootTime) {
+				om.createProjectile();
+				projectileTime = currentTime;
 			}
 		}
 	}
