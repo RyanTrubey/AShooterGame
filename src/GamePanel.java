@@ -51,6 +51,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	int projY;
 	Date projectileTime = new Date();
 	int shootTime = 250;
+	static int score = 0;
+	static int highscore = 0;
 
 	public void paintComponent(Graphics g) {
 		if (currentstate == menustate) {
@@ -139,8 +141,13 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		if (right == true) {
 			om.movePlayer("right");
 		}
+		if(currentstate == gamestate) {
 		om.checkCollision();
 		om.cleanObjects();
+		if(currentstate == gamestate && !om.player.isAlive) {
+			end();
+		}
+		}
 	}
 
 	public void startGame() {
@@ -169,11 +176,22 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 				AShooterRunner.fHeight);
 		om.update();
 		om.draw(g);
+		g.setFont(textfont);
+		g.setColor(Color.black);
+		g.drawString("Score: " + score, 15, 40);
 	}
 
 	public void drawEndState(Graphics g) {
-		g.setColor(Color.gray);
+		g.setColor(Color.red);
 		g.fillRect(0, 0, AShooterRunner.fWidth, AShooterRunner.fHeight);
+		g.setColor(Color.gray);
+		g.fillRect(AShooterRunner.fWidth/2-optW/2, AShooterRunner.fHeight/2-optH/2-50, optW, optH);
+		g.setColor(Color.black);
+		g.setFont(textfont);
+		g.drawString("Back to Menu", AShooterRunner.fWidth/2-110, AShooterRunner.fHeight/2-35);
+		g.drawString("You Died", AShooterRunner.fWidth/2-75, AShooterRunner.fHeight/2-175);
+		g.drawString("Score: " + score, AShooterRunner.fWidth/2-250, AShooterRunner.fHeight/2-100);
+		g.drawString("Highscore: " + highscore, AShooterRunner.fWidth/2+50, AShooterRunner.fHeight/2-100);
 	}
 
 	public void drawOptionState(Graphics g) {
@@ -194,6 +212,11 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 			g.drawString("Team Human", AShooterRunner.fWidth / 2 - 90, AShooterRunner.fHeight / 2 - 10);
 		}
 	}
+	public void end() {
+		om.eList.clear();
+		om.pList.clear();
+		currentstate = endstate;
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -201,6 +224,9 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		if (currentstate == menustate) {
 			if (e.getX() > startX && e.getX() < startX + startW && e.getY() > startY + adjustment
 					&& e.getY() < startY + GamePanel.startH + adjustment) {
+				e.consume();
+				up=down=right=left=false;
+				score = 0;
 				currentstate = gamestate;
 				if (team == human) {
 					Player player = new Player(25, AShooterRunner.fHeight / 2 - 50, human);

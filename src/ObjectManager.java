@@ -93,6 +93,7 @@ public class ObjectManager {
 				if (p.colBox.intersects(e.colBox)) {
 					e.isAlive = false;
 					p.isAlive = false;
+					GamePanel.score++;
 				}
 			}
 		}
@@ -100,6 +101,9 @@ public class ObjectManager {
 			if(e.colBox.intersects(player.colBox)) {
 				player.isAlive = false;
 				e.isAlive = false;
+				if(GamePanel.score > GamePanel.highscore) {
+					GamePanel.highscore = GamePanel.score;
+				}
 			}
 		}
 	}
@@ -114,6 +118,5 @@ public class ObjectManager {
 				eList.remove(eList.get(i));
 			}
 		}
-		
 	}
 }
