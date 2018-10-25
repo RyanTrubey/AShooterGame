@@ -141,12 +141,12 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		if (right == true) {
 			om.movePlayer("right");
 		}
-		if(currentstate == gamestate) {
-		om.checkCollision();
-		om.cleanObjects();
-		if(currentstate == gamestate && !om.player.isAlive) {
-			end();
-		}
+		if (currentstate == gamestate) {
+			om.checkCollision();
+			om.cleanObjects();
+			if (currentstate == gamestate && !om.player.isAlive) {
+				end();
+			}
 		}
 	}
 
@@ -179,19 +179,21 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		g.setFont(textfont);
 		g.setColor(Color.black);
 		g.drawString("Score: " + score, 15, 40);
+		g.drawString("Base", 15, 90);
+		g.drawString("Health: " + om.health + "/" + om.totalhealth, 15, 125);
 	}
 
 	public void drawEndState(Graphics g) {
 		g.setColor(Color.red);
 		g.fillRect(0, 0, AShooterRunner.fWidth, AShooterRunner.fHeight);
 		g.setColor(Color.gray);
-		g.fillRect(AShooterRunner.fWidth/2-optW/2, AShooterRunner.fHeight/2-optH/2-50, optW, optH);
+		g.fillRect(AShooterRunner.fWidth / 2 - optW / 2, AShooterRunner.fHeight / 2 - optH / 2 - 50, optW, optH);
 		g.setColor(Color.black);
 		g.setFont(textfont);
-		g.drawString("Back to Menu", AShooterRunner.fWidth/2-110, AShooterRunner.fHeight/2-35);
-		g.drawString("You Died", AShooterRunner.fWidth/2-75, AShooterRunner.fHeight/2-175);
-		g.drawString("Score: " + score, AShooterRunner.fWidth/2-250, AShooterRunner.fHeight/2-100);
-		g.drawString("Highscore: " + highscore, AShooterRunner.fWidth/2+50, AShooterRunner.fHeight/2-100);
+		g.drawString("Back to Menu", AShooterRunner.fWidth / 2 - 110, AShooterRunner.fHeight / 2 - 35);
+		g.drawString("You Died", AShooterRunner.fWidth / 2 - 75, AShooterRunner.fHeight / 2 - 175);
+		g.drawString("Score: " + score, AShooterRunner.fWidth / 2 - 250, AShooterRunner.fHeight / 2 - 100);
+		g.drawString("Highscore: " + highscore, AShooterRunner.fWidth / 2 + 50, AShooterRunner.fHeight / 2 - 100);
 	}
 
 	public void drawOptionState(Graphics g) {
@@ -212,6 +214,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 			g.drawString("Team Human", AShooterRunner.fWidth / 2 - 90, AShooterRunner.fHeight / 2 - 10);
 		}
 	}
+
 	public void end() {
 		om.eList.clear();
 		om.pList.clear();
@@ -225,15 +228,23 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 			if (e.getX() > startX && e.getX() < startX + startW && e.getY() > startY + adjustment
 					&& e.getY() < startY + GamePanel.startH + adjustment) {
 				e.consume();
-				up=down=right=left=false;
+				up = down = right = left = false;
 				score = 0;
 				currentstate = gamestate;
 				if (team == human) {
 					Player player = new Player(25, AShooterRunner.fHeight / 2 - 50, human);
 					om.addPlayer(player);
+					om.health = 25;
+					om.totalhealth = om.health;
+					shootTime = 250;
+					om.playerspeed = 5;
 				} else {
 					Player player = new Player(AShooterRunner.fWidth - 75, AShooterRunner.fHeight / 2 - 50, alien);
 					om.addPlayer(player);
+					om.health = 5;
+					om.playerspeed = 7;
+					om.totalhealth = om.health;
+					shootTime = 50;
 				}
 			}
 			if (e.getX() > optX && e.getX() < optX + optW && e.getY() > optY + adjustment
@@ -256,9 +267,15 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 			}
 		} else if (currentstate == gamestate) {
 			Date currentTime = new Date();
-			if(currentTime.getTime() - projectileTime.getTime() >= shootTime) {
+			if (currentTime.getTime() - projectileTime.getTime() >= shootTime) {
 				om.createProjectile();
 				projectileTime = currentTime;
+			}
+		} else if (currentstate == endstate) {
+			if (e.getX() > AShooterRunner.fWidth / 2 - optW / 2 && e.getX() < AShooterRunner.fWidth / 2 + optW / 2
+					&& e.getY() > AShooterRunner.fHeight / 2 - optH / 2 - 50
+					&& e.getY() < (AShooterRunner.fHeight / 2 - optH / 2 - 50) + optH) {
+				currentstate = menustate;
 			}
 		}
 	}

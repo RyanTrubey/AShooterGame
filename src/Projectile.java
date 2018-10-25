@@ -20,12 +20,16 @@ public void update() {
 	} else if(type.equalsIgnoreCase("human")) {
 		x+=5;
 	}
+	if(type.equalsIgnoreCase("human")) {
 	colBox.setBounds(x, y, 20, 4);
+	} else {
+		colBox.setBounds(x, y, 20, 2);
+	}
 }
 public void drawProjectile(Graphics g) {
 	if(type.equalsIgnoreCase("alien")) {
 		g.setColor(Color.magenta);
-		g.fillRect(x, y, 20, 4);
+		g.fillRect(x, y, 20, 2);
 	} else if(type.equalsIgnoreCase("human")) {
 		g.setColor(Color.red);
 		g.fillRect(x, y, 20, 4);

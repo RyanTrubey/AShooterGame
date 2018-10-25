@@ -20,13 +20,13 @@ public Enemy(int x, int y, int direction, Color color) {
 public void update() {
 	x+=direction;
 	if(direction < 0) {
-		if(x+20 < 0) {
+		if(x+1 < AShooterRunner.fWidth/8) {
 			x=AShooterRunner.fWidth - 100;
 			Random r = new Random();
 			y = r.nextInt(AShooterRunner.fHeight - 50);
 		}
 	} else if(direction > 0) {
-		if(x > AShooterRunner.fWidth) {
+		if(x+19 > AShooterRunner.fWidth-AShooterRunner.fWidth/8) {
 			x=80;
 			Random r = new Random();
 			y = r.nextInt(AShooterRunner.fHeight - 50);

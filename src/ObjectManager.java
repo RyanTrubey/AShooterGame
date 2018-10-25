@@ -8,7 +8,9 @@ public class ObjectManager {
 	ArrayList<Projectile> pList = new ArrayList<Projectile>();
 	int enemyNumber = 10;
 	Player player;
-
+	int health;
+	int totalhealth;
+	int playerspeed;
 	public void addEnemy(Enemy e) {
 		eList.add(e);
 	}
@@ -63,16 +65,22 @@ public class ObjectManager {
 
 	public void movePlayer(String direction) {
 		if (direction.equals("up")) {
-			player.y -= 5;
+			player.y -= playerspeed;
+			if(player.y < 0) {
+				player.y=AShooterRunner.fHeight-25;
+			}
 		}
 		if (direction.equals("down")) {
-			player.y += 5;
+			player.y += playerspeed;
+			if(player.y > AShooterRunner.fHeight-50) {
+				player.y= -25;
+			}
 		}
 		if (direction.equals("left") && player.x > 0) {
-			player.x -= 5;
+			player.x -= playerspeed;
 		}
 		if (direction.equals("right") && player.x < AShooterRunner.fWidth-50) {
-			player.x += 5;
+			player.x += playerspeed;
 		}
 		player.updateColBox();
 	}
@@ -105,6 +113,27 @@ public class ObjectManager {
 					GamePanel.highscore = GamePanel.score;
 				}
 			}
+			if(e.direction > 0) {
+				if(e.x+20 > AShooterRunner.fWidth-AShooterRunner.fWidth/8) {
+					health-=1;
+				}
+			} else if(e.direction < 0) {
+				if(e.x < AShooterRunner.fWidth/8) {
+					health-=1;
+				}
+			}
+		}
+		if(player.type == GamePanel.human) {
+			if(player.x+50 > AShooterRunner.fWidth-AShooterRunner.fWidth/8) {
+				player.isAlive = false;
+			}
+		} else if(player.type == GamePanel.alien) {
+			if(player.x < AShooterRunner.fWidth/8) {
+				player.isAlive = false;
+			}
+		}
+		if(health == 0) {
+			player.isAlive = false;
 		}
 	}
 	public void cleanObjects() {
