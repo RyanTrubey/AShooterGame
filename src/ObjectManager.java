@@ -43,11 +43,11 @@ public class ObjectManager {
 			if (GamePanel.team == GamePanel.human) {
 				Random r = new Random();
 				Enemy e = new Enemy(AShooterRunner.fWidth - 100,
-						r.nextInt(AShooterRunner.fHeight - 50) + GamePanel.adjustment, -1, Color.white);
+						r.nextInt(AShooterRunner.fHeight - 50) + GamePanel.adjustment, -1, Color.white, 1);
 				addEnemy(e);
 			} else if (GamePanel.team == GamePanel.alien) {
 				Random r = new Random();
-				Enemy e = new Enemy(50, r.nextInt(AShooterRunner.fHeight - 50) + GamePanel.adjustment, 1, Color.yellow);
+				Enemy e = new Enemy(50, r.nextInt(AShooterRunner.fHeight - 50) + GamePanel.adjustment, 1, Color.yellow, 2);
 				addEnemy(e);
 			}
 
@@ -99,9 +99,8 @@ public class ObjectManager {
 		for (Projectile p : pList) {
 			for (Enemy e : eList) {
 				if (p.colBox.intersects(e.colBox)) {
-					e.isAlive = false;
 					p.isAlive = false;
-					GamePanel.score++;
+					e.health--;
 				}
 			}
 		}
@@ -145,6 +144,7 @@ public class ObjectManager {
 		for(int i = 0; i < eList.size(); i++) {
 			if(eList.get(i).isAlive == false) {
 				eList.remove(eList.get(i));
+				GamePanel.score++;
 			}
 		}
 	}

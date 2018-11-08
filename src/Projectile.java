@@ -21,7 +21,7 @@ public void update() {
 		x+=5;
 	}
 	if(type.equalsIgnoreCase("human")) {
-	colBox.setBounds(x, y, 20, 4);
+	colBox.setBounds(x, y, 20, 8);
 	} else {
 		colBox.setBounds(x, y, 20, 2);
 	}
@@ -32,7 +32,7 @@ public void drawProjectile(Graphics g) {
 		g.fillRect(x, y, 20, 2);
 	} else if(type.equalsIgnoreCase("human")) {
 		g.setColor(Color.red);
-		g.fillRect(x, y, 20, 4);
+		g.fillRect(x, y, 20, 8);
 	}
 }
 }

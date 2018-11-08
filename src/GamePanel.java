@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Random;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -53,6 +54,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	int shootTime = 250;
 	static int score = 0;
 	static int highscore = 0;
+	static int tempW = AShooterRunner.fWidth;
+	static int tempH = AShooterRunner.fHeight;
 
 	public void paintComponent(Graphics g) {
 		if (currentstate == menustate) {
@@ -201,11 +204,12 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		g.fillRect(0, 0, AShooterRunner.fWidth, AShooterRunner.fHeight);
 		g.setColor(Color.gray);
 		g.fillRect(backX, backY, backW, startH);
+		g.fillRect(teamX, teamY, 300, 50);
+		g.fillRect(teamX-50, teamY+100, 400, 50);
 		g.setColor(Color.black);
 		g.setFont(textfont);
+		g.drawString("Change Screen Size", AShooterRunner.fWidth / 2 - 165, AShooterRunner.fHeight / 2 + 90);
 		g.drawString("Back", backX + backW / 2 - 40, backY + startH / 2 + 15);
-		g.setColor(Color.gray);
-		g.fillRect(teamX, teamY, 300, 50);
 		if (team == alien) {
 			g.setColor(Color.black);
 			g.drawString("Team Alien", AShooterRunner.fWidth / 2 - 90, AShooterRunner.fHeight / 2 - 10);
@@ -234,10 +238,10 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 				if (team == human) {
 					Player player = new Player(25, AShooterRunner.fHeight / 2 - 50, human);
 					om.addPlayer(player);
-					om.health = 25;
+					om.health = 10;
 					om.totalhealth = om.health;
 					shootTime = 250;
-					om.playerspeed = 5;
+					om.playerspeed = 3;
 				} else {
 					Player player = new Player(AShooterRunner.fWidth - 75, AShooterRunner.fHeight / 2 - 50, alien);
 					om.addPlayer(player);
@@ -255,15 +259,20 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 			if (e.getX() > backX && e.getX() < backX + backW && e.getY() > backY + adjustment
 					&& e.getY() < backY + startH + adjustment) {
 				currentstate = menustate;
-				System.out.println(team);
 			} else if (e.getX() > teamX && e.getX() < teamX + 300 && e.getY() > teamY + adjustment
 					&& e.getY() < teamY + 50 + adjustment) {
-				System.out.println("Something" + team);
 				if (team == human) {
 					team = alien;
 				} else {
 					team = human;
 				}
+			} else if (e.getX() > teamX-50 && e.getX() < teamX-50+400 && e.getY() > teamY+100+adjustment && e.getY() < teamY+100+adjustment+50) {
+				String tempWS = JOptionPane.showInputDialog("Enter Width");
+				String tempHS = JOptionPane.showInputDialog("Enter Height");
+				tempW = Integer.parseInt(tempWS);
+				tempH = Integer.parseInt(tempHS);
+				AShooterRunner.fWidth = tempW;
+				AShooterRunner.fHeight = tempH;
 			}
 		} else if (currentstate == gamestate) {
 			Date currentTime = new Date();
