@@ -5,8 +5,8 @@ import java.awt.event.MouseListener;
 import javax.swing.JFrame;
 
 public class AShooterRunner {
-	static int fWidth = 1280;
-	static int fHeight = 720;
+	static int fWidth = 1920;
+	static int fHeight = 1080;
 	JFrame frame;
 	GamePanel panel;
 

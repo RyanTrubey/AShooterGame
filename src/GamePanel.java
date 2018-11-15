@@ -23,21 +23,26 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	final int optionstate = 3;
 	static int optX = AShooterRunner.fWidth / 2 - 150;
 	static int optY = AShooterRunner.fHeight / 2 - 25;
-	static int optW = 300;
-	static int optH = 50;
+	static int boxW = 300;
+	static int boxH = 50;
 	static int startX = AShooterRunner.fWidth / 2 - 150;
 	static int startY = AShooterRunner.fHeight / 2 - 150;
-	static int startW = 300;
-	static int startH = 50;
-	static int backX = 50;
-	static int backY = AShooterRunner.fHeight - 225;
-	static int backW = startW - 100;
+	static int backX = AShooterRunner.fWidth / 15;
+	static int backY = AShooterRunner.fHeight - AShooterRunner.fHeight / 6;
+	static int backW = boxW - 100;
 	static int adjustment = 25;
+	int teamX = AShooterRunner.fWidth / 2 - 150;
+	int teamY = AShooterRunner.fHeight / 2 - 75;
+	int screenBtnX = AShooterRunner.fWidth / 2 - 200;
+	int screenBtnY = AShooterRunner.fHeight / 2;
+	int screenBtnW = 400;
+	static int tempW = AShooterRunner.fWidth;
+	static int tempH = AShooterRunner.fHeight;
+	int upX = screenBtnX+screenBtnW+15;
+	int downX = screenBtnX-65;
 	int currentstate = menustate;
 	int spawnTime = 120;
 	int timerTick = 0;
-	int teamX = AShooterRunner.fWidth / 2 - 150;
-	int teamY = AShooterRunner.fHeight / 2 - 50;
 	ObjectManager om;
 	Random r = new Random();
 	static final int human = 1;
@@ -54,8 +59,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	int shootTime = 250;
 	static int score = 0;
 	static int highscore = 0;
-	static int tempW = AShooterRunner.fWidth;
-	static int tempH = AShooterRunner.fHeight;
 
 	public void paintComponent(Graphics g) {
 		if (currentstate == menustate) {
@@ -161,8 +164,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		g.setColor(Color.red);
 		g.fillRect(0, 0, AShooterRunner.fWidth, AShooterRunner.fHeight);
 		g.setColor(Color.gray);
-		g.fillRect(optX, optY, optW, optH);
-		g.fillRect(startX, startY, startW, startH);
+		g.fillRect(optX, optY, boxW, boxH);
+		g.fillRect(startX, startY, boxW, boxH);
 		g.setColor(Color.black);
 		g.setFont(textfont);
 		g.drawString("Start", AShooterRunner.fWidth / 2 - 50, AShooterRunner.fHeight / 2 - 110);
@@ -190,7 +193,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		g.setColor(Color.red);
 		g.fillRect(0, 0, AShooterRunner.fWidth, AShooterRunner.fHeight);
 		g.setColor(Color.gray);
-		g.fillRect(AShooterRunner.fWidth / 2 - optW / 2, AShooterRunner.fHeight / 2 - optH / 2 - 50, optW, optH);
+		g.fillRect(AShooterRunner.fWidth / 2 - boxW / 2, AShooterRunner.fHeight / 2 - boxH / 2 - 50, boxW, boxH);
 		g.setColor(Color.black);
 		g.setFont(textfont);
 		g.drawString("Back to Menu", AShooterRunner.fWidth / 2 - 110, AShooterRunner.fHeight / 2 - 35);
@@ -203,19 +206,21 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		g.setColor(Color.green);
 		g.fillRect(0, 0, AShooterRunner.fWidth, AShooterRunner.fHeight);
 		g.setColor(Color.gray);
-		g.fillRect(backX, backY, backW, startH);
-		g.fillRect(teamX, teamY, 300, 50);
-		g.fillRect(teamX-50, teamY+100, 400, 50);
+		g.fillRect(backX, backY, backW, boxH);
+		g.fillRect(teamX, teamY, boxW, boxH);
+		g.fillRect(screenBtnX, screenBtnY, screenBtnW, boxH);
+		g.fillRect(upX, screenBtnY, boxH, boxH);
+		g.fillRect(downX, screenBtnY, boxH, boxH);
 		g.setColor(Color.black);
 		g.setFont(textfont);
-		g.drawString("Change Screen Size", AShooterRunner.fWidth / 2 - 165, AShooterRunner.fHeight / 2 + 90);
-		g.drawString("Back", backX + backW / 2 - 40, backY + startH / 2 + 15);
+		g.drawString(tempW + "x" + tempH, screenBtnX+100, screenBtnY+40);
+		g.drawString("Back", backX+50, backY+40);
 		if (team == alien) {
 			g.setColor(Color.black);
-			g.drawString("Team Alien", AShooterRunner.fWidth / 2 - 90, AShooterRunner.fHeight / 2 - 10);
+			g.drawString("Team Alien", teamX+35, teamY+40);
 		} else if (team == human) {
 			g.setColor(Color.black);
-			g.drawString("Team Human", AShooterRunner.fWidth / 2 - 90, AShooterRunner.fHeight / 2 - 10);
+			g.drawString("Team Human", teamX+35, teamY+40);
 		}
 	}
 
@@ -229,8 +234,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 		if (currentstate == menustate) {
-			if (e.getX() > startX && e.getX() < startX + startW && e.getY() > startY + adjustment
-					&& e.getY() < startY + GamePanel.startH + adjustment) {
+			if (e.getX() > startX && e.getX() < startX + boxW && e.getY() > startY + adjustment
+					&& e.getY() < startY + boxH + adjustment) {
 				e.consume();
 				up = down = right = left = false;
 				score = 0;
@@ -251,13 +256,13 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 					shootTime = 50;
 				}
 			}
-			if (e.getX() > optX && e.getX() < optX + optW && e.getY() > optY + adjustment
-					&& e.getY() < optY + optH + adjustment) {
+			if (e.getX() > optX && e.getX() < optX + boxW && e.getY() > optY + adjustment
+					&& e.getY() < optY + boxH + adjustment) {
 				currentstate = optionstate;
 			}
 		} else if (currentstate == optionstate) {
 			if (e.getX() > backX && e.getX() < backX + backW && e.getY() > backY + adjustment
-					&& e.getY() < backY + startH + adjustment) {
+					&& e.getY() < backY + boxH + adjustment) {
 				currentstate = menustate;
 			} else if (e.getX() > teamX && e.getX() < teamX + 300 && e.getY() > teamY + adjustment
 					&& e.getY() < teamY + 50 + adjustment) {
@@ -266,13 +271,34 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 				} else {
 					team = human;
 				}
-			} else if (e.getX() > teamX-50 && e.getX() < teamX-50+400 && e.getY() > teamY+100+adjustment && e.getY() < teamY+100+adjustment+50) {
-				String tempWS = JOptionPane.showInputDialog("Enter Width");
-				String tempHS = JOptionPane.showInputDialog("Enter Height");
-				tempW = Integer.parseInt(tempWS);
-				tempH = Integer.parseInt(tempHS);
-				AShooterRunner.fWidth = tempW;
-				AShooterRunner.fHeight = tempH;
+			} else if (e.getX() > upX && e.getX() < upX+boxH && e.getY() > screenBtnY+adjustment && e.getY() < screenBtnY+boxH+adjustment) {
+				if(tempW == 1280) {
+					tempW = 1920;
+					tempH = 1080;
+				} else if(tempW == 1920) {
+					tempW = 2560;
+					tempH = 1440;
+				} else if(tempW == 2560) {
+					tempW = 3840;
+					tempH = 2160;
+				} else if(tempW == 3840) {
+					tempW = 1280;
+					tempH = 720;
+				}
+			} else if (e.getX() > downX && e.getX() < downX+boxH && e.getY() > screenBtnY+adjustment && e.getY() < screenBtnY+boxH+adjustment) {
+				if(tempW == 3840) {
+					tempW = 2560;
+					tempH = 1440;
+				} else if(tempW == 2560) {
+					tempW = 1920;
+					tempH = 1080;
+				} else if(tempW == 1920) {
+					tempW = 1280;
+					tempH = 720;
+				} else if(tempW == 1280) {
+					tempW = 3840;
+					tempH = 2160;
+				}
 			}
 		} else if (currentstate == gamestate) {
 			Date currentTime = new Date();
@@ -281,9 +307,9 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 				projectileTime = currentTime;
 			}
 		} else if (currentstate == endstate) {
-			if (e.getX() > AShooterRunner.fWidth / 2 - optW / 2 && e.getX() < AShooterRunner.fWidth / 2 + optW / 2
-					&& e.getY() > AShooterRunner.fHeight / 2 - optH / 2 - 50
-					&& e.getY() < (AShooterRunner.fHeight / 2 - optH / 2 - 50) + optH) {
+			if (e.getX() > AShooterRunner.fWidth / 2 - boxW / 2 && e.getX() < AShooterRunner.fWidth / 2 + boxW / 2
+					&& e.getY() > AShooterRunner.fHeight / 2 - boxH / 2 - 50
+					&& e.getY() < (AShooterRunner.fHeight / 2 - boxH / 2 - 50) + boxH) {
 				currentstate = menustate;
 			}
 		}
