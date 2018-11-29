@@ -25,16 +25,16 @@ public void update() {
 		isAlive = false;
 	}
 	if(direction < 0) {
-		if(x+1 < AShooterRunner.fWidth/8) {
-			x=AShooterRunner.fWidth - 100;
+		if(x+1 < GamePanel.frame.getWidth()/8) {
+			x=GamePanel.frame.getWidth() - 100;
 			Random r = new Random();
-			y = r.nextInt(AShooterRunner.fHeight - 50);
+			y = r.nextInt(GamePanel.frame.getHeight() - 50);
 		}
 	} else if(direction > 0) {
-		if(x+19 > AShooterRunner.fWidth-AShooterRunner.fWidth/8) {
+		if(x+19 > GamePanel.frame.getWidth()-GamePanel.frame.getWidth()/8) {
 			x=80;
 			Random r = new Random();
-			y = r.nextInt(AShooterRunner.fHeight - 50);
+			y = r.nextInt(GamePanel.frame.getHeight() - 50);
 		}
 	}
 	colBox.setBounds(x, y, 20, 20);

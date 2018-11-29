@@ -20,8 +20,8 @@ public class AShooterRunner {
 	}
 
 	public void setup() {
-		panel = new GamePanel();
 		frame = new JFrame();
+		panel = new GamePanel(frame);
 		frame.setTitle("AShooterGame");
 		frame.add(panel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

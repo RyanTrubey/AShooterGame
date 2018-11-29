@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Random;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -40,6 +41,9 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	static int tempH = AShooterRunner.fHeight;
 	int upX = screenBtnX+screenBtnW+15;
 	int downX = screenBtnX-65;
+	int applyX = backX;
+	int applyY = backY-75;
+	int applyW = backW;
 	int currentstate = menustate;
 	int spawnTime = 120;
 	int timerTick = 0;
@@ -58,7 +62,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	Date projectileTime = new Date();
 	int shootTime = 250;
 	static int score = 0;
-	static int highscore = 0;
+	static int highscore = 0; 
+	static JFrame frame;
 
 	public void paintComponent(Graphics g) {
 		if (currentstate == menustate) {
@@ -72,8 +77,9 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		}
 	}
 
-	public GamePanel() {
+	public GamePanel(JFrame frame) {
 		addKeyListener(this);
+		this.frame = frame;
 		timer = new Timer(1000 / 60, this);
 		om = new ObjectManager();
 	}
@@ -92,16 +98,16 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		} else if (e.getKeyCode() == KeyEvent.VK_ENTER && currentstate == optionstate) {
 			currentstate = menustate;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_W && currentstate == gamestate) {
+		if (e.getKeyCode() == KeyEvent.VK_UP && currentstate == gamestate) {
 			up = true;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_S && currentstate == gamestate) {
+		if (e.getKeyCode() == KeyEvent.VK_DOWN && currentstate == gamestate) {
 			down = true;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_A && currentstate == gamestate) {
+		if (e.getKeyCode() == KeyEvent.VK_LEFT && currentstate == gamestate) {
 			left = true;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_D && currentstate == gamestate) {
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT && currentstate == gamestate) {
 			right = true;
 		}
 
@@ -110,16 +116,16 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		if (e.getKeyCode() == KeyEvent.VK_W && currentstate == gamestate) {
+		if (e.getKeyCode() == KeyEvent.VK_UP && currentstate == gamestate) {
 			up = false;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_S && currentstate == gamestate) {
+		if (e.getKeyCode() == KeyEvent.VK_DOWN && currentstate == gamestate) {
 			down = false;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_A && currentstate == gamestate) {
+		if (e.getKeyCode() == KeyEvent.VK_LEFT && currentstate == gamestate) {
 			left = false;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_D && currentstate == gamestate) {
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT && currentstate == gamestate) {
 			right = false;
 		}
 
@@ -211,10 +217,12 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		g.fillRect(screenBtnX, screenBtnY, screenBtnW, boxH);
 		g.fillRect(upX, screenBtnY, boxH, boxH);
 		g.fillRect(downX, screenBtnY, boxH, boxH);
+		g.fillRect(applyX, applyY, applyW, boxH);
 		g.setColor(Color.black);
 		g.setFont(textfont);
 		g.drawString(tempW + "x" + tempH, screenBtnX+100, screenBtnY+40);
 		g.drawString("Back", backX+50, backY+40);
+		g.drawString("Apply", applyX+50, applyY+40);
 		if (team == alien) {
 			g.setColor(Color.black);
 			g.drawString("Team Alien", teamX+35, teamY+40);
@@ -299,6 +307,32 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 					tempW = 3840;
 					tempH = 2160;
 				}
+			} else if (e.getX() > applyX && e.getX() < applyX+applyW && e.getY() > applyY+adjustment && e.getY() < applyY+boxH+adjustment) {
+				AShooterRunner.fWidth = tempW;
+				AShooterRunner.fHeight = tempH;
+				optX = AShooterRunner.fWidth / 2 - 150;
+				optY = AShooterRunner.fHeight / 2 - 25;
+				boxW = 300;
+				boxH = 50;
+				startX = AShooterRunner.fWidth / 2 - 150;
+				startY = AShooterRunner.fHeight / 2 - 150;
+				backX = AShooterRunner.fWidth / 15;
+				backY = AShooterRunner.fHeight - AShooterRunner.fHeight / 6;
+				backW = boxW - 100;
+				adjustment = 25;
+				teamX = AShooterRunner.fWidth / 2 - 150;
+				teamY = AShooterRunner.fHeight / 2 - 75;
+				screenBtnX = AShooterRunner.fWidth / 2 - 200;
+				screenBtnY = AShooterRunner.fHeight / 2;
+				screenBtnW = 400;
+				tempW = AShooterRunner.fWidth;
+				tempH = AShooterRunner.fHeight;
+				upX = screenBtnX+screenBtnW+15;
+				downX = screenBtnX-65;
+				applyX = backX;
+				applyY = backY-75;
+				applyW = backW;
+				frame.setSize(tempW, tempH);
 			}
 		} else if (currentstate == gamestate) {
 			Date currentTime = new Date();

@@ -42,12 +42,12 @@ public class ObjectManager {
 		if (eList.size() < enemyNumber) {
 			if (GamePanel.team == GamePanel.human) {
 				Random r = new Random();
-				Enemy e = new Enemy(AShooterRunner.fWidth - 100,
-						r.nextInt(AShooterRunner.fHeight - 50) + GamePanel.adjustment, -1, Color.white, 1);
+				Enemy e = new Enemy(GamePanel.frame.getWidth() - 100,
+						r.nextInt(GamePanel.frame.getHeight() - 50) + GamePanel.adjustment, -1, Color.white, 1);
 				addEnemy(e);
 			} else if (GamePanel.team == GamePanel.alien) {
 				Random r = new Random();
-				Enemy e = new Enemy(50, r.nextInt(AShooterRunner.fHeight - 50) + GamePanel.adjustment, 1, Color.yellow, 2);
+				Enemy e = new Enemy(50, r.nextInt(GamePanel.frame.getHeight() - 50) + GamePanel.adjustment, 1, Color.yellow, 2);
 				addEnemy(e);
 			}
 
@@ -67,19 +67,19 @@ public class ObjectManager {
 		if (direction.equals("up")) {
 			player.y -= playerspeed;
 			if(player.y < 0) {
-				player.y=AShooterRunner.fHeight-25;
+				player.y=GamePanel.frame.getHeight()-25;
 			}
 		}
 		if (direction.equals("down")) {
 			player.y += playerspeed;
-			if(player.y > AShooterRunner.fHeight-50) {
+			if(player.y > GamePanel.frame.getHeight()-50) {
 				player.y= -25;
 			}
 		}
 		if (direction.equals("left") && player.x > 0) {
 			player.x -= playerspeed;
 		}
-		if (direction.equals("right") && player.x < AShooterRunner.fWidth-50) {
+		if (direction.equals("right") && player.x < GamePanel.frame.getWidth()-50) {
 			player.x += playerspeed;
 		}
 		player.updateColBox();
@@ -113,21 +113,21 @@ public class ObjectManager {
 				}
 			}
 			if(e.direction > 0) {
-				if(e.x+20 > AShooterRunner.fWidth-AShooterRunner.fWidth/8) {
+				if(e.x+20 > GamePanel.frame.getWidth()-GamePanel.frame.getWidth()/8) {
 					health-=1;
 				}
 			} else if(e.direction < 0) {
-				if(e.x < AShooterRunner.fWidth/8) {
+				if(e.x < GamePanel.frame.getWidth()/8) {
 					health-=1;
 				}
 			}
 		}
 		if(player.type == GamePanel.human) {
-			if(player.x+50 > AShooterRunner.fWidth-AShooterRunner.fWidth/8) {
+			if(player.x+50 > GamePanel.frame.getWidth()-GamePanel.frame.getWidth()/8) {
 				player.isAlive = false;
 			}
 		} else if(player.type == GamePanel.alien) {
-			if(player.x < AShooterRunner.fWidth/8) {
+			if(player.x < GamePanel.frame.getWidth()/8) {
 				player.isAlive = false;
 			}
 		}
