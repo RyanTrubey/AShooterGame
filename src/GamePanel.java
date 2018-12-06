@@ -1,6 +1,8 @@
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -37,13 +39,16 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	int screenBtnX = AShooterRunner.fWidth / 2 - 200;
 	int screenBtnY = AShooterRunner.fHeight / 2;
 	int screenBtnW = 400;
+	int menuX = AShooterRunner.fWidth / 2 - boxW / 2;
+	int menuY = AShooterRunner.fHeight / 2 - boxH / 2 - 50;
 	static int tempW = AShooterRunner.fWidth;
 	static int tempH = AShooterRunner.fHeight;
-	int upX = screenBtnX+screenBtnW+15;
-	int downX = screenBtnX-65;
+	int upX = screenBtnX + screenBtnW + 15;
+	int downX = screenBtnX - 65;
 	int applyX = backX;
-	int applyY = backY-75;
+	int applyY = backY - 75;
 	int applyW = backW;
+	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	int currentstate = menustate;
 	int spawnTime = 120;
 	int timerTick = 0;
@@ -62,7 +67,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	Date projectileTime = new Date();
 	int shootTime = 250;
 	static int score = 0;
-	static int highscore = 0; 
+	static int highscore = 0;
 	static JFrame frame;
 
 	public void paintComponent(Graphics g) {
@@ -199,13 +204,15 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		g.setColor(Color.red);
 		g.fillRect(0, 0, AShooterRunner.fWidth, AShooterRunner.fHeight);
 		g.setColor(Color.gray);
-		g.fillRect(AShooterRunner.fWidth / 2 - boxW / 2, AShooterRunner.fHeight / 2 - boxH / 2 - 50, boxW, boxH);
+		g.fillRect(menuX, menuY, boxW, boxH);
 		g.setColor(Color.black);
 		g.setFont(textfont);
 		g.drawString("Back to Menu", AShooterRunner.fWidth / 2 - 110, AShooterRunner.fHeight / 2 - 35);
 		g.drawString("You Died", AShooterRunner.fWidth / 2 - 75, AShooterRunner.fHeight / 2 - 175);
 		g.drawString("Score: " + score, AShooterRunner.fWidth / 2 - 250, AShooterRunner.fHeight / 2 - 100);
 		g.drawString("Highscore: " + highscore, AShooterRunner.fWidth / 2 + 50, AShooterRunner.fHeight / 2 - 100);
+		System.out.println(menuX + " " + menuY + " " + (AShooterRunner.fWidth / 2 - 110) + " "
+				+ (AShooterRunner.fHeight / 2 - 35) + " " + boxW + " " + boxH);
 	}
 
 	public void drawOptionState(Graphics g) {
@@ -220,15 +227,15 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		g.fillRect(applyX, applyY, applyW, boxH);
 		g.setColor(Color.black);
 		g.setFont(textfont);
-		g.drawString(tempW + "x" + tempH, screenBtnX+100, screenBtnY+40);
-		g.drawString("Back", backX+50, backY+40);
-		g.drawString("Apply", applyX+50, applyY+40);
+		g.drawString(tempW + "x" + tempH, screenBtnX + 100, screenBtnY + 40);
+		g.drawString("Back", backX + 50, backY + 40);
+		g.drawString("Apply", applyX + 50, applyY + 40);
 		if (team == alien) {
 			g.setColor(Color.black);
-			g.drawString("Team Alien", teamX+35, teamY+40);
+			g.drawString("Team Alien", teamX + 35, teamY + 40);
 		} else if (team == human) {
 			g.setColor(Color.black);
-			g.drawString("Team Human", teamX+35, teamY+40);
+			g.drawString("Team Human", teamX + 35, teamY + 40);
 		}
 	}
 
@@ -279,35 +286,42 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 				} else {
 					team = human;
 				}
-			} else if (e.getX() > upX && e.getX() < upX+boxH && e.getY() > screenBtnY+adjustment && e.getY() < screenBtnY+boxH+adjustment) {
-				if(tempW == 1280) {
+			} else if (e.getX() > upX && e.getX() < upX + boxH && e.getY() > screenBtnY + adjustment
+					&& e.getY() < screenBtnY + boxH + adjustment) {
+				if (tempW == 1280) {
 					tempW = 1920;
 					tempH = 1080;
-				} else if(tempW == 1920) {
+				} else if (tempW == 1920) {
 					tempW = 2560;
 					tempH = 1440;
-				} else if(tempW == 2560) {
+				} else if (tempW == 2560) {
 					tempW = 3840;
 					tempH = 2160;
-				} else if(tempW == 3840) {
+				} else if (tempW == 3840) {
 					tempW = 1280;
 					tempH = 720;
 				}
-			} else if (e.getX() > downX && e.getX() < downX+boxH && e.getY() > screenBtnY+adjustment && e.getY() < screenBtnY+boxH+adjustment) {
-				if(tempW == 3840) {
+			} else if (e.getX() > downX && e.getX() < downX + boxH && e.getY() > screenBtnY + adjustment
+					&& e.getY() < screenBtnY + boxH + adjustment) {
+				if (tempW == 3840) {
 					tempW = 2560;
 					tempH = 1440;
-				} else if(tempW == 2560) {
+				} else if (tempW == 2560) {
 					tempW = 1920;
 					tempH = 1080;
-				} else if(tempW == 1920) {
+				} else if (tempW == 1920) {
 					tempW = 1280;
 					tempH = 720;
-				} else if(tempW == 1280) {
+				} else if (tempW == 1280) {
 					tempW = 3840;
 					tempH = 2160;
 				}
-			} else if (e.getX() > applyX && e.getX() < applyX+applyW && e.getY() > applyY+adjustment && e.getY() < applyY+boxH+adjustment) {
+			} else if (e.getX() > applyX && e.getX() < applyX + applyW && e.getY() > applyY + adjustment
+					&& e.getY() < applyY + boxH + adjustment) {
+				if (tempW > screenSize.width || tempH > screenSize.height) {
+					tempW = screenSize.width;
+					tempH = screenSize.height;
+				}
 				AShooterRunner.fWidth = tempW;
 				AShooterRunner.fHeight = tempH;
 				optX = AShooterRunner.fWidth / 2 - 150;
@@ -327,12 +341,15 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 				screenBtnW = 400;
 				tempW = AShooterRunner.fWidth;
 				tempH = AShooterRunner.fHeight;
-				upX = screenBtnX+screenBtnW+15;
-				downX = screenBtnX-65;
+				upX = screenBtnX + screenBtnW + 15;
+				downX = screenBtnX - 65;
 				applyX = backX;
-				applyY = backY-75;
+				applyY = backY - 75;
 				applyW = backW;
 				frame.setSize(tempW, tempH);
+				menuX = AShooterRunner.fWidth / 2 - boxW / 2;
+				menuY = AShooterRunner.fHeight / 2 - boxH / 2 - 50;
+
 			}
 		} else if (currentstate == gamestate) {
 			Date currentTime = new Date();
@@ -341,12 +358,13 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 				projectileTime = currentTime;
 			}
 		} else if (currentstate == endstate) {
-			if (e.getX() > AShooterRunner.fWidth / 2 - boxW / 2 && e.getX() < AShooterRunner.fWidth / 2 + boxW / 2
-					&& e.getY() > AShooterRunner.fHeight / 2 - boxH / 2 - 50
-					&& e.getY() < (AShooterRunner.fHeight / 2 - boxH / 2 - 50) + boxH) {
+			if (e.getX() > menuX && e.getX() < menuX + boxW && e.getY() > menuY + adjustment
+					&& e.getY() < menuY + boxH + adjustment) {
+
 				currentstate = menustate;
 			}
 		}
+		System.out.println(e.getX() + " " + e.getY());
 	}
 
 	@Override
