@@ -9,9 +9,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -69,6 +72,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	static int score = 0;
 	static int highscore = 0;
 	static JFrame frame;
+	static BufferedImage humanShip;
 
 	public void paintComponent(Graphics g) {
 		if (currentstate == menustate) {
@@ -87,6 +91,12 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		this.frame = frame;
 		timer = new Timer(1000 / 60, this);
 		om = new ObjectManager();
+		try {
+			humanShip = ImageIO.read(this.getClass().getResourceAsStream("Human Ship.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

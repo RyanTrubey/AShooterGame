@@ -16,8 +16,9 @@ public Player(int x, int y, int type) {
 }
 public void drawPlayer(Graphics g) {
 	if(type == GamePanel.human) {
-	g.setColor(Color.red);
-	g.fillRect(x, y, 50, 50);
+	g.drawImage(GamePanel.humanShip, x, y, 60, 60, null);
+	//g.setColor(Color.red);
+	//g.fillRect(x, y, 50, 50);
 	} else {
 		g.setColor(Color.cyan);
 		g.fillRect(x, y, 50, 50);
@@ -30,6 +31,6 @@ public int getY() {
 	return y;
 }
 public void updateColBox() {
-	colBox.setBounds(x, y, 50, 50);
+	colBox.setBounds(x, y, 60, 60);
 }
 }
