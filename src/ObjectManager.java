@@ -101,6 +101,9 @@ public class ObjectManager {
 				if (p.colBox.intersects(e.colBox)) {
 					p.isAlive = false;
 					e.health--;
+					if(e.health <= 0) {
+						GamePanel.score++;
+					}
 				}
 			}
 		}
@@ -125,14 +128,23 @@ public class ObjectManager {
 		if(player.type == GamePanel.human) {
 			if(player.x+50 > GamePanel.frame.getWidth()-GamePanel.frame.getWidth()/8) {
 				player.isAlive = false;
+				if(GamePanel.score > GamePanel.highscore) {
+					GamePanel.highscore = GamePanel.score;
+				}
 			}
 		} else if(player.type == GamePanel.alien) {
 			if(player.x < GamePanel.frame.getWidth()/8) {
 				player.isAlive = false;
+				if(GamePanel.score > GamePanel.highscore) {
+					GamePanel.highscore = GamePanel.score;
+				}
 			}
 		}
 		if(health == 0) {
 			player.isAlive = false;
+			if(GamePanel.score > GamePanel.highscore) {
+				GamePanel.highscore = GamePanel.score;
+			}
 		}
 	}
 	public void cleanObjects() {
@@ -144,7 +156,6 @@ public class ObjectManager {
 		for(int i = 0; i < eList.size(); i++) {
 			if(eList.get(i).isAlive == false) {
 				eList.remove(eList.get(i));
-				GamePanel.score++;
 			}
 		}
 	}

@@ -61,6 +61,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	static final int alien = 2;
 	static int team = human;
 	Font textfont = new Font("Impact", Font.PLAIN, 40);
+	Font gamefont = new Font("Impact", Font.PLAIN, 30);
 	boolean up;
 	boolean down;
 	boolean left;
@@ -73,6 +74,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	static int highscore = 0;
 	static JFrame frame;
 	static BufferedImage humanShip;
+	static BufferedImage alienShip;
+	static BufferedImage titleScreen;
 
 	public void paintComponent(Graphics g) {
 		if (currentstate == menustate) {
@@ -97,6 +100,18 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		try {
+			alienShip = ImageIO.read(this.getClass().getResourceAsStream("Alien Ship.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			titleScreen = ImageIO.read(this.getClass().getResourceAsStream("Title_Screen.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -113,16 +128,16 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		} else if (e.getKeyCode() == KeyEvent.VK_ENTER && currentstate == optionstate) {
 			currentstate = menustate;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_UP && currentstate == gamestate) {
+		if (e.getKeyCode() == KeyEvent.VK_W && currentstate == gamestate) {
 			up = true;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_DOWN && currentstate == gamestate) {
+		if (e.getKeyCode() == KeyEvent.VK_S && currentstate == gamestate) {
 			down = true;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_LEFT && currentstate == gamestate) {
+		if (e.getKeyCode() == KeyEvent.VK_A && currentstate == gamestate) {
 			left = true;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_RIGHT && currentstate == gamestate) {
+		if (e.getKeyCode() == KeyEvent.VK_D && currentstate == gamestate) {
 			right = true;
 		}
 
@@ -131,16 +146,16 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		if (e.getKeyCode() == KeyEvent.VK_UP && currentstate == gamestate) {
+		if (e.getKeyCode() == KeyEvent.VK_W && currentstate == gamestate) {
 			up = false;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_DOWN && currentstate == gamestate) {
+		if (e.getKeyCode() == KeyEvent.VK_S && currentstate == gamestate) {
 			down = false;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_LEFT && currentstate == gamestate) {
+		if (e.getKeyCode() == KeyEvent.VK_A && currentstate == gamestate) {
 			left = false;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_RIGHT && currentstate == gamestate) {
+		if (e.getKeyCode() == KeyEvent.VK_D && currentstate == gamestate) {
 			right = false;
 		}
 
@@ -175,6 +190,19 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 				end();
 			}
 		}
+		if(score > 10) {
+			om.enemyNumber = 15;
+			spawnTime = 60;
+		} else if(score > 20) {
+			om.enemyNumber = 20;
+			spawnTime = 30;
+		} else if(score > 30) {
+			om.enemyNumber = 30;
+			spawnTime = 20;
+		} else if(score > 50) {
+			om.enemyNumber = 60;
+			spawnTime = 1;
+		}
 	}
 
 	public void startGame() {
@@ -182,8 +210,9 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	}
 
 	public void drawMenuState(Graphics g) {
-		g.setColor(Color.red);
-		g.fillRect(0, 0, AShooterRunner.fWidth, AShooterRunner.fHeight);
+		g.setColor(Color.black);
+		g.drawRect(0, 0, tempW, tempH);
+		g.drawImage(titleScreen, 0, -20, tempW, tempH, null);
 		g.setColor(Color.gray);
 		g.fillRect(optX, optY, boxW, boxH);
 		g.fillRect(startX, startY, boxW, boxH);
@@ -203,11 +232,10 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 				AShooterRunner.fHeight);
 		om.update();
 		om.draw(g);
-		g.setFont(textfont);
-		g.setColor(Color.black);
-		g.drawString("Score: " + score, 15, 40);
-		g.drawString("Base", 15, 90);
-		g.drawString("Health: " + om.health + "/" + om.totalhealth, 15, 125);
+		g.setFont(gamefont);
+		g.setColor(Color.white);
+		g.drawString("Score: " + score, tempW/2-50, 60);
+		g.drawString("Base Health: " + om.health + "/" + om.totalhealth, tempW/2-100, 100);
 	}
 
 	public void drawEndState(Graphics g) {
@@ -221,8 +249,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		g.drawString("You Died", AShooterRunner.fWidth / 2 - 75, AShooterRunner.fHeight / 2 - 175);
 		g.drawString("Score: " + score, AShooterRunner.fWidth / 2 - 250, AShooterRunner.fHeight / 2 - 100);
 		g.drawString("Highscore: " + highscore, AShooterRunner.fWidth / 2 + 50, AShooterRunner.fHeight / 2 - 100);
-		System.out.println(menuX + " " + menuY + " " + (AShooterRunner.fWidth / 2 - 110) + " "
-				+ (AShooterRunner.fHeight / 2 - 35) + " " + boxW + " " + boxH);
 	}
 
 	public void drawOptionState(Graphics g) {
@@ -237,6 +263,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		g.fillRect(applyX, applyY, applyW, boxH);
 		g.setColor(Color.black);
 		g.setFont(textfont);
+		g.drawString("<", downX+10, screenBtnY+boxH-10);
+		g.drawString(">", upX+10, screenBtnY+boxH-10);
 		g.drawString(tempW + "x" + tempH, screenBtnX + 100, screenBtnY + 40);
 		g.drawString("Back", backX + 50, backY + 40);
 		g.drawString("Apply", applyX + 50, applyY + 40);
@@ -374,7 +402,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 				currentstate = menustate;
 			}
 		}
-		System.out.println(e.getX() + " " + e.getY());
 	}
 
 	@Override

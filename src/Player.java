@@ -20,8 +20,7 @@ public void drawPlayer(Graphics g) {
 	//g.setColor(Color.red);
 	//g.fillRect(x, y, 50, 50);
 	} else {
-		g.setColor(Color.cyan);
-		g.fillRect(x, y, 50, 50);
+		g.drawImage(GamePanel.alienShip, x, y, 60, 60, null);
 	}
 }
 public int getX() {
