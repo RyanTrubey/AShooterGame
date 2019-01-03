@@ -76,6 +76,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	static BufferedImage humanShip;
 	static BufferedImage alienShip;
 	static BufferedImage titleScreen;
+	static BufferedImage gameScreen;
 
 	public void paintComponent(Graphics g) {
 		if (currentstate == menustate) {
@@ -108,6 +109,12 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		}
 		try {
 			titleScreen = ImageIO.read(this.getClass().getResourceAsStream("Title_Screen.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			gameScreen = ImageIO.read(this.getClass().getResourceAsStream("GameScreen.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -223,13 +230,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	}
 
 	public void drawGameState(Graphics g) {
-		g.setColor(Color.black);
-		g.fillRect(0, 0, AShooterRunner.fWidth, AShooterRunner.fHeight);
-		g.setColor(new Color(0, 150, 0));
-		g.fillRect(0, 0, AShooterRunner.fWidth / 8, AShooterRunner.fHeight);
-		g.setColor(new Color(100, 0, 125));
-		g.fillRect(AShooterRunner.fWidth - AShooterRunner.fWidth / 8, 0, AShooterRunner.fWidth / 8,
-				AShooterRunner.fHeight);
+		g.drawImage(gameScreen, 0, 0, tempW, tempH, null);
 		om.update();
 		om.draw(g);
 		g.setFont(gamefont);

@@ -1,23 +1,41 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Random;
+
+import javax.imageio.ImageIO;
 
 public class Enemy {
 int x;
 int y;
 int direction;
 int health;
-Color color;
+String team;
 Rectangle colBox;
 Boolean isAlive = true;
-public Enemy(int x, int y, int direction, Color color, int health) {
+BufferedImage humanEnemy;
+BufferedImage alienEnemy;
+public Enemy(int x, int y, int direction, String team, int health) {
 	this.x = x;
 	this.y = y;
 	this.direction = direction;
-	this.color = color;
+	this.team = team;
 	this.health = health;
 	colBox = new Rectangle(x, y, 20, 20);
+	try {
+		humanEnemy = ImageIO.read(this.getClass().getResourceAsStream("HumanEnemy.png"));
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	try {
+		alienEnemy = ImageIO.read(this.getClass().getResourceAsStream("AlienEnemy.png"));
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 }
 public void update() {
 	x+=direction;
@@ -37,10 +55,13 @@ public void update() {
 			y = r.nextInt(GamePanel.frame.getHeight() - 50);
 		}
 	}
-	colBox.setBounds(x, y, 20, 20);
+	colBox.setBounds(x, y, 45, 45);
 }
 public void drawEnemy(Graphics g) {
-	g.setColor(color);
-	g.fillRect(x, y, 20, 20);
+	if(team.equals("human")) {
+		g.drawImage(humanEnemy, x, y, 45, 45, null);
+	} else {
+		g.drawImage(alienEnemy, x, y, 45, 45, null);
+	}
 }
 }

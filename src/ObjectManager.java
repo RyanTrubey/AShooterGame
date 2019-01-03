@@ -43,11 +43,11 @@ public class ObjectManager {
 			if (GamePanel.team == GamePanel.human) {
 				Random r = new Random();
 				Enemy e = new Enemy(GamePanel.frame.getWidth() - 100,
-						r.nextInt(GamePanel.frame.getHeight() - 50) + GamePanel.adjustment, -1, Color.white, 1);
+						r.nextInt(GamePanel.frame.getHeight() - 50) + GamePanel.adjustment, -3, "alien", 1);
 				addEnemy(e);
 			} else if (GamePanel.team == GamePanel.alien) {
 				Random r = new Random();
-				Enemy e = new Enemy(50, r.nextInt(GamePanel.frame.getHeight() - 50) + GamePanel.adjustment, 1, Color.yellow, 2);
+				Enemy e = new Enemy(50, r.nextInt(GamePanel.frame.getHeight() - 50) + GamePanel.adjustment, 1, "human", 2);
 				addEnemy(e);
 			}
 
