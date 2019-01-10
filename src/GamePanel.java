@@ -54,6 +54,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	int currentstate = menustate;
 	int spawnTime = 120;
+	int bigSpawnTime = 1200;
 	int timerTick = 0;
 	ObjectManager om;
 	Random r = new Random();
@@ -77,6 +78,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	static BufferedImage alienShip;
 	static BufferedImage titleScreen;
 	static BufferedImage gameScreen;
+	static BufferedImage optionScreen;
 
 	public void paintComponent(Graphics g) {
 		if (currentstate == menustate) {
@@ -115,6 +117,12 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		}
 		try {
 			gameScreen = ImageIO.read(this.getClass().getResourceAsStream("GameScreen.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			optionScreen = ImageIO.read(this.getClass().getResourceAsStream("OptionBackground.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -173,6 +181,9 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		timerTick++;
 		if (timerTick % spawnTime == 0 && currentstate == gamestate) {
 			om.spawn();
+		}
+		if (timerTick % bigSpawnTime == 0 && currentstate == gamestate) {
+			om.spawnBigEnemy();
 		}
 		if (currentstate != gamestate) {
 			om.clear();
@@ -240,11 +251,10 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	}
 
 	public void drawEndState(Graphics g) {
-		g.setColor(Color.red);
-		g.fillRect(0, 0, AShooterRunner.fWidth, AShooterRunner.fHeight);
+		g.drawImage(gameScreen, 0, 0, tempW, tempH, null);
 		g.setColor(Color.gray);
 		g.fillRect(menuX, menuY, boxW, boxH);
-		g.setColor(Color.black);
+		g.setColor(Color.white);
 		g.setFont(textfont);
 		g.drawString("Back to Menu", AShooterRunner.fWidth / 2 - 110, AShooterRunner.fHeight / 2 - 35);
 		g.drawString("You Died", AShooterRunner.fWidth / 2 - 75, AShooterRunner.fHeight / 2 - 175);
@@ -253,8 +263,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	}
 
 	public void drawOptionState(Graphics g) {
-		g.setColor(Color.green);
-		g.fillRect(0, 0, AShooterRunner.fWidth, AShooterRunner.fHeight);
+		g.drawImage(optionScreen, 0, 0, AShooterRunner.fWidth, AShooterRunner.fHeight, null);
 		g.setColor(Color.gray);
 		g.fillRect(backX, backY, backW, boxH);
 		g.fillRect(teamX, teamY, boxW, boxH);
@@ -339,6 +348,9 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 				} else if (tempW == 3840) {
 					tempW = 1280;
 					tempH = 720;
+				} else {
+					tempW = 1280;
+					tempH = 720;
 				}
 			} else if (e.getX() > downX && e.getX() < downX + boxH && e.getY() > screenBtnY + adjustment
 					&& e.getY() < screenBtnY + boxH + adjustment) {
@@ -354,6 +366,9 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 				} else if (tempW == 1280) {
 					tempW = 3840;
 					tempH = 2160;
+				} else {
+					tempW = 1280;
+					tempH = 720;
 				}
 			} else if (e.getX() > applyX && e.getX() < applyX + applyW && e.getY() > applyY + adjustment
 					&& e.getY() < applyY + boxH + adjustment) {

@@ -17,8 +17,6 @@ public Player(int x, int y, int type) {
 public void drawPlayer(Graphics g) {
 	if(type == GamePanel.human) {
 	g.drawImage(GamePanel.humanShip, x, y, 60, 60, null);
-	//g.setColor(Color.red);
-	//g.fillRect(x, y, 50, 50);
 	} else {
 		g.drawImage(GamePanel.alienShip, x, y, 60, 60, null);
 	}

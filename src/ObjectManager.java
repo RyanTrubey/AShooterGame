@@ -6,6 +6,7 @@ import java.util.Random;
 public class ObjectManager {
 	ArrayList<Enemy> eList = new ArrayList<Enemy>();
 	ArrayList<Projectile> pList = new ArrayList<Projectile>();
+	ArrayList<BigEnemy> bList = new ArrayList<BigEnemy>();
 	int enemyNumber = 10;
 	Player player;
 	int health;
@@ -13,6 +14,9 @@ public class ObjectManager {
 	int playerspeed;
 	public void addEnemy(Enemy e) {
 		eList.add(e);
+	}
+	public void addBigEnemy(BigEnemy b) {
+		bList.add(b);
 	}
 
 	public void addProjectile(Projectile p) {
@@ -26,6 +30,9 @@ public class ObjectManager {
 		for (Projectile p : pList) {
 			p.drawProjectile(g);
 		}
+		for (BigEnemy b : bList) {
+			b.drawBigEnemy(g);
+		}
 		player.drawPlayer(g);
 	}
 
@@ -35,6 +42,9 @@ public class ObjectManager {
 		}
 		for (Projectile p : pList) {
 			p.update();
+		}
+		for (BigEnemy b : bList) {
+			b.update();
 		}
 	}
 
@@ -52,7 +62,35 @@ public class ObjectManager {
 			}
 
 		}
-
+	}
+	public void spawnBigEnemy() {
+		if(GamePanel.team == GamePanel.human) {
+			Random r = new Random();
+			int num = r.nextInt(3);
+			if(num == 1) {
+				BigEnemy b = new BigEnemy(GamePanel.frame.getWidth() - 100, GamePanel.frame.getHeight()/3 + GamePanel.adjustment, "alien", 5);
+				addBigEnemy(b);
+			} else if(num == 2) {
+				BigEnemy b = new BigEnemy(GamePanel.frame.getWidth() - 100, GamePanel.frame.getHeight()/2 + GamePanel.adjustment, "alien", 5);
+				addBigEnemy(b);
+			} else {
+				BigEnemy b = new BigEnemy(GamePanel.frame.getWidth() - 100, GamePanel.frame.getHeight() - GamePanel.frame.getHeight()/3 + GamePanel.adjustment, "alien", 5);
+				addBigEnemy(b);
+			}
+		} else {
+			Random r = new Random();
+			int num = r.nextInt(3);
+			if(num == 1) {
+				BigEnemy b = new BigEnemy(50, GamePanel.frame.getHeight()/3 + GamePanel.adjustment, "human", 5);
+				addBigEnemy(b);
+			} else if(num == 2) {
+				BigEnemy b = new BigEnemy(50, GamePanel.frame.getHeight()/2 + GamePanel.adjustment, "human", 5);
+				addBigEnemy(b);
+			} else {
+				BigEnemy b = new BigEnemy(50, GamePanel.frame.getHeight() - GamePanel.frame.getHeight()/3 + GamePanel.adjustment, "human", 5);
+				addBigEnemy(b);
+			}
+		}
 	}
 
 	public void clear() {
@@ -144,6 +182,15 @@ public class ObjectManager {
 			player.isAlive = false;
 			if(GamePanel.score > GamePanel.highscore) {
 				GamePanel.highscore = GamePanel.score;
+			}
+		}
+		for(BigEnemy b : bList) {
+			if(b.colBox.intersects(player.colBox)) {
+				b.isAlive = false;
+				player.isAlive = false;
+				if(GamePanel.score > GamePanel.highscore) {
+					GamePanel.highscore = GamePanel.score;
+				}
 			}
 		}
 	}

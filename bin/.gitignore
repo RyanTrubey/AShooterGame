@@ -1,12 +1,14 @@
 /AShooterRunner.class
 /Alien Ship.png
+/AlienEnemy.png
 /Enemy.class
 /GamePanel.class
+/GameScreen.png
 /Human Ship.png
+/HumanEnemy.png
 /ObjectManager.class
 /Player.class
 /Projectile.class
 /Title_Screen.png
-/AlienEnemy.png
-/HumanEnemy.png
-/GameScreen.png
+/OptionBackground.png
+/BigEnemy.class
