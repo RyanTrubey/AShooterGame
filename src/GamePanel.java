@@ -211,15 +211,18 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		if(score > 10) {
 			om.enemyNumber = 15;
 			spawnTime = 60;
+			bigSpawnTime = 900;
 		} else if(score > 20) {
 			om.enemyNumber = 20;
 			spawnTime = 30;
+			bigSpawnTime = 500;
 		} else if(score > 30) {
 			om.enemyNumber = 30;
 			spawnTime = 20;
 		} else if(score > 50) {
 			om.enemyNumber = 60;
 			spawnTime = 1;
+			bigSpawnTime = 100;
 		}
 	}
 
@@ -290,7 +293,10 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	public void end() {
 		om.eList.clear();
 		om.pList.clear();
+		om.bList.clear();
 		currentstate = endstate;
+		spawnTime = 120;
+		bigSpawnTime = 1200;
 	}
 
 	@Override
@@ -309,7 +315,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 					om.health = 10;
 					om.totalhealth = om.health;
 					shootTime = 250;
-					om.playerspeed = 3;
+					om.playerspeed = 4;
 				} else {
 					Player player = new Player(AShooterRunner.fWidth - 75, AShooterRunner.fHeight / 2 - 50, alien);
 					om.addPlayer(player);
@@ -410,6 +416,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 			if (currentTime.getTime() - projectileTime.getTime() >= shootTime) {
 				om.createProjectile();
 				projectileTime = currentTime;
+				om.random = new Random();
 			}
 		} else if (currentstate == endstate) {
 			if (e.getX() > menuX && e.getX() < menuX + boxW && e.getY() > menuY + adjustment

@@ -18,6 +18,9 @@ public BigEnemy(int x, int y, String type, int health) {
 	colBox = new Rectangle(x, y, w, h);
 }
 public void update() {
+	if(health <= 0) {
+		isAlive = false;
+	}
 	if(type.equalsIgnoreCase("human")) {
 		x+=1;
 	} else if(type.equalsIgnoreCase("alien")) {

@@ -12,6 +12,7 @@ public class ObjectManager {
 	int health;
 	int totalhealth;
 	int playerspeed;
+	Random random;
 	public void addEnemy(Enemy e) {
 		eList.add(e);
 	}
@@ -68,26 +69,26 @@ public class ObjectManager {
 			Random r = new Random();
 			int num = r.nextInt(3);
 			if(num == 1) {
-				BigEnemy b = new BigEnemy(GamePanel.frame.getWidth() - 100, GamePanel.frame.getHeight()/3 + GamePanel.adjustment, "alien", 5);
+				BigEnemy b = new BigEnemy(GamePanel.frame.getWidth() - 100, GamePanel.frame.getHeight()/3 + GamePanel.adjustment, "alien", 11);
 				addBigEnemy(b);
 			} else if(num == 2) {
-				BigEnemy b = new BigEnemy(GamePanel.frame.getWidth() - 100, GamePanel.frame.getHeight()/2 + GamePanel.adjustment, "alien", 5);
+				BigEnemy b = new BigEnemy(GamePanel.frame.getWidth() - 100, GamePanel.frame.getHeight()/2 + GamePanel.adjustment, "alien", 11);
 				addBigEnemy(b);
 			} else {
-				BigEnemy b = new BigEnemy(GamePanel.frame.getWidth() - 100, GamePanel.frame.getHeight() - GamePanel.frame.getHeight()/3 + GamePanel.adjustment, "alien", 5);
+				BigEnemy b = new BigEnemy(GamePanel.frame.getWidth() - 100, GamePanel.frame.getHeight() - GamePanel.frame.getHeight()/3 + GamePanel.adjustment, "alien", 11);
 				addBigEnemy(b);
 			}
 		} else {
 			Random r = new Random();
 			int num = r.nextInt(3);
 			if(num == 1) {
-				BigEnemy b = new BigEnemy(50, GamePanel.frame.getHeight()/3 + GamePanel.adjustment, "human", 5);
+				BigEnemy b = new BigEnemy(50, GamePanel.frame.getHeight()/3 + GamePanel.adjustment, "human", 21);
 				addBigEnemy(b);
 			} else if(num == 2) {
-				BigEnemy b = new BigEnemy(50, GamePanel.frame.getHeight()/2 + GamePanel.adjustment, "human", 5);
+				BigEnemy b = new BigEnemy(50, GamePanel.frame.getHeight()/2 + GamePanel.adjustment, "human", 21);
 				addBigEnemy(b);
 			} else {
-				BigEnemy b = new BigEnemy(50, GamePanel.frame.getHeight() - GamePanel.frame.getHeight()/3 + GamePanel.adjustment, "human", 5);
+				BigEnemy b = new BigEnemy(50, GamePanel.frame.getHeight() - GamePanel.frame.getHeight()/3 + GamePanel.adjustment, "human", 21);
 				addBigEnemy(b);
 			}
 		}
@@ -137,10 +138,41 @@ public class ObjectManager {
 		for (Projectile p : pList) {
 			for (Enemy e : eList) {
 				if (p.colBox.intersects(e.colBox)) {
+					if(p.type.equalsIgnoreCase("alien")) {
 					p.isAlive = false;
+					} else {
+						if(random.nextInt(2) == 0) {
+							p.y-=50;
+							p.yVelocity = -4;
+						} else {
+							p.yVelocity = 4;
+							p.y+=50;
+						}
+					}
 					e.health--;
 					if(e.health <= 0) {
 						GamePanel.score++;
+					}
+				}
+			}
+		}
+		for (BigEnemy b : bList) {
+			for(Projectile p : pList) {
+				if(p.colBox.intersects(b.colBox)) {
+					if(p.type.equalsIgnoreCase("alien")) {
+					p.isAlive = false;
+					} else {
+						if(random.nextInt(2) == 0) {
+							p.y-=160;
+							p.yVelocity = -2;
+						} else {
+							p.y+=160;
+							p.yVelocity = 2;
+						}
+					}
+					b.health--;
+					if(b.health <= 0) {
+						GamePanel.score+=2;
 					}
 				}
 			}
@@ -163,6 +195,30 @@ public class ObjectManager {
 				}
 			}
 		}
+		for (BigEnemy b : bList) {
+			if(b.type.equals("human")) {
+				if(b.x+b.w > GamePanel.tempW - GamePanel.tempW/8) {
+					health-=3;
+					b.isAlive = false;
+				}
+			} else {
+				if(b.x < GamePanel.tempW/8) {
+					health-=3;
+					b.isAlive = false;
+				}
+			}
+		}
+		for (Projectile p : pList) {
+			if(p.type.equalsIgnoreCase("human")) {
+				if(p.x > GamePanel.tempW) {
+					p.isAlive = false;
+				}
+			} else {
+				if(p.x < 0) {
+					p.isAlive = false;
+				}
+			}
+		}
 		if(player.type == GamePanel.human) {
 			if(player.x+50 > GamePanel.frame.getWidth()-GamePanel.frame.getWidth()/8) {
 				player.isAlive = false;
@@ -178,7 +234,7 @@ public class ObjectManager {
 				}
 			}
 		}
-		if(health == 0) {
+		if(health <= 0) {
 			player.isAlive = false;
 			if(GamePanel.score > GamePanel.highscore) {
 				GamePanel.highscore = GamePanel.score;
@@ -203,6 +259,11 @@ public class ObjectManager {
 		for(int i = 0; i < eList.size(); i++) {
 			if(eList.get(i).isAlive == false) {
 				eList.remove(eList.get(i));
+			}
+		}
+		for(int i = 0; i < bList.size(); i++) {
+			if(bList.get(i).isAlive == false) {
+				bList.remove(bList.get(i));
 			}
 		}
 	}
