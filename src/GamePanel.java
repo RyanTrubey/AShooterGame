@@ -15,9 +15,7 @@ import java.util.Date;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -53,8 +51,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	int applyW = backW;
 	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	int currentstate = menustate;
-	int spawnTime = 120;
-	int bigSpawnTime = 1200;
+	int spawnTime = 40;
+	int bigSpawnTime = 250;
 	int timerTick = 0;
 	ObjectManager om;
 	Random r = new Random();
@@ -63,22 +61,26 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	static int team = human;
 	Font textfont = new Font("Impact", Font.PLAIN, 40);
 	Font gamefont = new Font("Impact", Font.PLAIN, 30);
+	Font smallfont = new Font("Impact", Font.PLAIN, 20);
 	boolean up;
 	boolean down;
 	boolean left;
 	boolean right;
+	boolean fast;
 	int projX;
 	int projY;
 	Date projectileTime = new Date();
 	int shootTime = 250;
 	static int score = 0;
 	static int highscore = 0;
-	static JFrame frame;
+	JFrame frame;
 	static BufferedImage humanShip;
 	static BufferedImage alienShip;
 	static BufferedImage titleScreen;
 	static BufferedImage gameScreen;
 	static BufferedImage optionScreen;
+	int boxX;
+	int boxY;
 
 	public void paintComponent(Graphics g) {
 		if (currentstate == menustate) {
@@ -100,78 +102,83 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		try {
 			humanShip = ImageIO.read(this.getClass().getResourceAsStream("Human Ship.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		try {
 			alienShip = ImageIO.read(this.getClass().getResourceAsStream("Alien Ship.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		try {
 			titleScreen = ImageIO.read(this.getClass().getResourceAsStream("Title_Screen.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		try {
 			gameScreen = ImageIO.read(this.getClass().getResourceAsStream("GameScreen.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		try {
 			optionScreen = ImageIO.read(this.getClass().getResourceAsStream("OptionBackground.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
+		
 
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		if (e.getKeyCode() == KeyEvent.VK_ENTER && currentstate != optionstate) {
-			currentstate++;
-		} else if (e.getKeyCode() == KeyEvent.VK_ENTER && currentstate == optionstate) {
-			currentstate = menustate;
-		}
-		if (e.getKeyCode() == KeyEvent.VK_W && currentstate == gamestate) {
-			up = true;
-		}
-		if (e.getKeyCode() == KeyEvent.VK_S && currentstate == gamestate) {
-			down = true;
-		}
-		if (e.getKeyCode() == KeyEvent.VK_A && currentstate == gamestate) {
-			left = true;
-		}
-		if (e.getKeyCode() == KeyEvent.VK_D && currentstate == gamestate) {
-			right = true;
+		
+		if (currentstate == gamestate) {
+			if (e.getKeyCode() == KeyEvent.VK_UP) {
+				up = true;
+			}
+			if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+				down = true;
+			}
+			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+				left = true;
+			}
+			if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+				right = true;
+			}
+			if (e.getKeyCode() == KeyEvent.VK_S) {
+				fast = true;
+			}
 		}
 
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		if (e.getKeyCode() == KeyEvent.VK_W && currentstate == gamestate) {
+		
+		if(currentstate == gamestate) {
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
 			up = false;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_S && currentstate == gamestate) {
+		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			down = false;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_A && currentstate == gamestate) {
+		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			left = false;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_D && currentstate == gamestate) {
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			right = false;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_S) {
+			fast = false;
+		}
 		}
 
 	}
@@ -188,18 +195,20 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		if (currentstate != gamestate) {
 			om.clear();
 		}
-		repaint();
-		if (up == true) {
+		if (up) {
 			om.movePlayer("up");
 		}
-		if (down == true) {
+		if (down) {
 			om.movePlayer("down");
 		}
-		if (left == true) {
+		if (left) {
 			om.movePlayer("left");
 		}
-		if (right == true) {
+		if (right) {
 			om.movePlayer("right");
+		}
+		if (fast) {
+			om.movePlayer("fast");
 		}
 		if (currentstate == gamestate) {
 			om.checkCollision();
@@ -208,22 +217,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 				end();
 			}
 		}
-		if(score > 10) {
-			om.enemyNumber = 15;
-			spawnTime = 60;
-			bigSpawnTime = 900;
-		} else if(score > 20) {
-			om.enemyNumber = 20;
-			spawnTime = 30;
-			bigSpawnTime = 500;
-		} else if(score > 30) {
-			om.enemyNumber = 30;
-			spawnTime = 20;
-		} else if(score > 50) {
-			om.enemyNumber = 60;
-			spawnTime = 1;
-			bigSpawnTime = 100;
-		}
+		repaint();
 	}
 
 	public void startGame() {
@@ -241,6 +235,18 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		g.setFont(textfont);
 		g.drawString("Start", AShooterRunner.fWidth / 2 - 50, AShooterRunner.fHeight / 2 - 110);
 		g.drawString("Options", AShooterRunner.fWidth / 2 - 70, AShooterRunner.fHeight / 2 + 15);
+		if(tempW == 1920) {
+		g.fillRect(tempW/2+40, tempH-86, 500, 30);
+		g.setColor(Color.white);
+		g.setFont(gamefont);
+		g.drawString("arrows to move.", tempW/2+45, tempH-60);
+		} else if(tempW == 1280) {
+			g.setColor(Color.black);
+			g.fillRect(tempW/2+27, tempH-71, 500, 30);
+			g.setFont(smallfont);
+			g.setColor(Color.white);
+			g.drawString("arrows to move.", tempW/2+30, tempH-47);
+		}
 	}
 
 	public void drawGameState(Graphics g) {
@@ -249,8 +255,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		om.draw(g);
 		g.setFont(gamefont);
 		g.setColor(Color.white);
-		g.drawString("Score: " + score, tempW/2-50, 60);
-		g.drawString("Base Health: " + om.health + "/" + om.totalhealth, tempW/2-100, 100);
+		g.drawString("Score: " + score, tempW / 2 - 50, 60);
+		g.drawString("Base Health: " + om.health + "/" + om.totalhealth, tempW / 2 - 100, 100);
 	}
 
 	public void drawEndState(Graphics g) {
@@ -276,8 +282,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		g.fillRect(applyX, applyY, applyW, boxH);
 		g.setColor(Color.black);
 		g.setFont(textfont);
-		g.drawString("<", downX+10, screenBtnY+boxH-10);
-		g.drawString(">", upX+10, screenBtnY+boxH-10);
+		g.drawString("<", downX + 10, screenBtnY + boxH - 10);
+		g.drawString(">", upX + 10, screenBtnY + boxH - 10);
 		g.drawString(tempW + "x" + tempH, screenBtnX + 100, screenBtnY + 40);
 		g.drawString("Back", backX + 50, backY + 40);
 		g.drawString("Apply", applyX + 50, applyY + 40);
@@ -295,13 +301,11 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		om.pList.clear();
 		om.bList.clear();
 		currentstate = endstate;
-		spawnTime = 120;
-		bigSpawnTime = 1200;
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
+		
 		if (currentstate == menustate) {
 			if (e.getX() > startX && e.getX() < startX + boxW && e.getY() > startY + adjustment
 					&& e.getY() < startY + boxH + adjustment) {
@@ -429,25 +433,24 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
+	
 
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
+	
 
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
+	
 
 	}
 }

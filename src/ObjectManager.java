@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Random;
@@ -53,12 +52,12 @@ public class ObjectManager {
 		if (eList.size() < enemyNumber) {
 			if (GamePanel.team == GamePanel.human) {
 				Random r = new Random();
-				Enemy e = new Enemy(GamePanel.frame.getWidth() - 100,
-						r.nextInt(GamePanel.frame.getHeight() - 50) + GamePanel.adjustment, -3, "alien", 1);
+				Enemy e = new Enemy(GamePanel.tempW - 100,
+						r.nextInt(GamePanel.tempH - 50) + GamePanel.adjustment, -3, "alien", 1);
 				addEnemy(e);
 			} else if (GamePanel.team == GamePanel.alien) {
 				Random r = new Random();
-				Enemy e = new Enemy(50, r.nextInt(GamePanel.frame.getHeight() - 50) + GamePanel.adjustment, 1, "human", 2);
+				Enemy e = new Enemy(50, r.nextInt(GamePanel.tempH - 50) + GamePanel.adjustment, 1, "human", 2);
 				addEnemy(e);
 			}
 
@@ -69,26 +68,26 @@ public class ObjectManager {
 			Random r = new Random();
 			int num = r.nextInt(3);
 			if(num == 1) {
-				BigEnemy b = new BigEnemy(GamePanel.frame.getWidth() - 100, GamePanel.frame.getHeight()/3 + GamePanel.adjustment, "alien", 11);
+				BigEnemy b = new BigEnemy(GamePanel.tempW - 100, GamePanel.tempH/3 + GamePanel.adjustment, "alien", 11);
 				addBigEnemy(b);
 			} else if(num == 2) {
-				BigEnemy b = new BigEnemy(GamePanel.frame.getWidth() - 100, GamePanel.frame.getHeight()/2 + GamePanel.adjustment, "alien", 11);
+				BigEnemy b = new BigEnemy(GamePanel.tempW - 100, GamePanel.tempH/2 + GamePanel.adjustment, "alien", 11);
 				addBigEnemy(b);
 			} else {
-				BigEnemy b = new BigEnemy(GamePanel.frame.getWidth() - 100, GamePanel.frame.getHeight() - GamePanel.frame.getHeight()/3 + GamePanel.adjustment, "alien", 11);
+				BigEnemy b = new BigEnemy(GamePanel.tempW - 100, GamePanel.tempH - GamePanel.tempH/3 + GamePanel.adjustment, "alien", 11);
 				addBigEnemy(b);
 			}
 		} else {
 			Random r = new Random();
 			int num = r.nextInt(3);
 			if(num == 1) {
-				BigEnemy b = new BigEnemy(50, GamePanel.frame.getHeight()/3 + GamePanel.adjustment, "human", 21);
+				BigEnemy b = new BigEnemy(50, GamePanel.tempH/3 + GamePanel.adjustment, "human", 21);
 				addBigEnemy(b);
 			} else if(num == 2) {
-				BigEnemy b = new BigEnemy(50, GamePanel.frame.getHeight()/2 + GamePanel.adjustment, "human", 21);
+				BigEnemy b = new BigEnemy(50, GamePanel.tempH/2 + GamePanel.adjustment, "human", 21);
 				addBigEnemy(b);
 			} else {
-				BigEnemy b = new BigEnemy(50, GamePanel.frame.getHeight() - GamePanel.frame.getHeight()/3 + GamePanel.adjustment, "human", 21);
+				BigEnemy b = new BigEnemy(50, GamePanel.tempH - GamePanel.tempH/3 + GamePanel.adjustment, "human", 21);
 				addBigEnemy(b);
 			}
 		}
@@ -96,6 +95,8 @@ public class ObjectManager {
 
 	public void clear() {
 		eList.clear();
+		pList.clear();
+		bList.clear();
 	}
 
 	public void addPlayer(Player player) {
@@ -106,19 +107,25 @@ public class ObjectManager {
 		if (direction.equals("up")) {
 			player.y -= playerspeed;
 			if(player.y < 0) {
-				player.y=GamePanel.frame.getHeight()-25;
+				player.y=GamePanel.tempH-25;
 			}
 		}
 		if (direction.equals("down")) {
 			player.y += playerspeed;
-			if(player.y > GamePanel.frame.getHeight()-50) {
+			if(player.y > GamePanel.tempH-50) {
+				player.y= -25;
+			}
+		}
+		if(direction.equals("fast")) {
+			player.y+=50;
+			if(player.y > GamePanel.tempH-50) {
 				player.y= -25;
 			}
 		}
 		if (direction.equals("left") && player.x > 0) {
 			player.x -= playerspeed;
 		}
-		if (direction.equals("right") && player.x < GamePanel.frame.getWidth()-50) {
+		if (direction.equals("right") && player.x < GamePanel.tempH-50) {
 			player.x += playerspeed;
 		}
 		player.updateColBox();
@@ -186,11 +193,13 @@ public class ObjectManager {
 				}
 			}
 			if(e.direction > 0) {
-				if(e.x+20 > GamePanel.frame.getWidth()-GamePanel.frame.getWidth()/8) {
+				if(e.x+20 > GamePanel.tempW-GamePanel.tempW/8) {
+					e.isAlive = false;
 					health-=1;
 				}
 			} else if(e.direction < 0) {
-				if(e.x < GamePanel.frame.getWidth()/8) {
+				if(e.x < GamePanel.tempW/8) {
+					e.isAlive = false;
 					health-=1;
 				}
 			}
@@ -220,14 +229,14 @@ public class ObjectManager {
 			}
 		}
 		if(player.type == GamePanel.human) {
-			if(player.x+50 > GamePanel.frame.getWidth()-GamePanel.frame.getWidth()/8) {
+			if(player.x+50 > GamePanel.tempW-GamePanel.tempW/8) {
 				player.isAlive = false;
 				if(GamePanel.score > GamePanel.highscore) {
 					GamePanel.highscore = GamePanel.score;
 				}
 			}
 		} else if(player.type == GamePanel.alien) {
-			if(player.x < GamePanel.frame.getWidth()/8) {
+			if(player.x < GamePanel.tempW/8) {
 				player.isAlive = false;
 				if(GamePanel.score > GamePanel.highscore) {
 					GamePanel.highscore = GamePanel.score;
