@@ -52,7 +52,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	int currentstate = menustate;
 	int spawnTime = 40;
-	int bigSpawnTime = 250;
+	int bigSpawnTime = 400;
 	int timerTick = 0;
 	ObjectManager om;
 	Random r = new Random();
@@ -102,44 +102,42 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		try {
 			humanShip = ImageIO.read(this.getClass().getResourceAsStream("Human Ship.png"));
 		} catch (IOException e) {
-			
+
 			e.printStackTrace();
 		}
 		try {
 			alienShip = ImageIO.read(this.getClass().getResourceAsStream("Alien Ship.png"));
 		} catch (IOException e) {
-			
+
 			e.printStackTrace();
 		}
 		try {
 			titleScreen = ImageIO.read(this.getClass().getResourceAsStream("Title_Screen.png"));
 		} catch (IOException e) {
-			
+
 			e.printStackTrace();
 		}
 		try {
 			gameScreen = ImageIO.read(this.getClass().getResourceAsStream("GameScreen.png"));
 		} catch (IOException e) {
-			
+
 			e.printStackTrace();
 		}
 		try {
 			optionScreen = ImageIO.read(this.getClass().getResourceAsStream("OptionBackground.png"));
 		} catch (IOException e) {
-			
+
 			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		
 
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		
 		if (currentstate == gamestate) {
 			if (e.getKeyCode() == KeyEvent.VK_UP) {
 				up = true;
@@ -156,29 +154,42 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 			if (e.getKeyCode() == KeyEvent.VK_S) {
 				fast = true;
 			}
+			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				if (score > 50) {
+					om.createProjectile();
+					om.random = new Random();
+				}
+			}
 		}
-
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		
-		if(currentstate == gamestate) {
-		if (e.getKeyCode() == KeyEvent.VK_UP) {
-			up = false;
-		}
-		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			down = false;
-		}
-		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			left = false;
-		}
-		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			right = false;
-		}
-		if (e.getKeyCode() == KeyEvent.VK_S) {
-			fast = false;
-		}
+
+		if (currentstate == gamestate) {
+			if (e.getKeyCode() == KeyEvent.VK_UP) {
+				up = false;
+			}
+			if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+				down = false;
+			}
+			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+				left = false;
+			}
+			if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+				right = false;
+			}
+			if (e.getKeyCode() == KeyEvent.VK_S) {
+				fast = false;
+			}
+			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				Date currentTime = new Date();
+				if (currentTime.getTime() - projectileTime.getTime() >= shootTime) {
+					om.createProjectile();
+					projectileTime = currentTime;
+					om.random = new Random();
+				}
+			}
 		}
 
 	}
@@ -235,17 +246,21 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		g.setFont(textfont);
 		g.drawString("Start", AShooterRunner.fWidth / 2 - 50, AShooterRunner.fHeight / 2 - 110);
 		g.drawString("Options", AShooterRunner.fWidth / 2 - 70, AShooterRunner.fHeight / 2 + 15);
-		if(tempW == 1920) {
-		g.fillRect(tempW/2+40, tempH-86, 500, 30);
-		g.setColor(Color.white);
-		g.setFont(gamefont);
-		g.drawString("arrows to move.", tempW/2+45, tempH-60);
-		} else if(tempW == 1280) {
+		if (tempW >= 1920) {
+			g.fillRect(tempW / 2 + 40, tempH - 86, 500, 30);
+			g.fillRect(tempW / 2 - 230, tempH - 86, 115, 30);
+			g.setColor(Color.white);
+			g.setFont(gamefont);
+			g.drawString("arrows to move.", tempW / 2 + 45, tempH - 60);
+			g.drawString("space", tempW / 2 - 200, tempH - 60);
+		} else if (tempW <= 1280) {
 			g.setColor(Color.black);
-			g.fillRect(tempW/2+27, tempH-71, 500, 30);
+			g.fillRect(tempW / 2 + 27, tempH - 71, 500, 30);
+			g.fillRect(tempW / 2 - 153, tempH - 71, 75, 30);
 			g.setFont(smallfont);
 			g.setColor(Color.white);
-			g.drawString("arrows to move.", tempW/2+30, tempH-47);
+			g.drawString("arrows to move.", tempW / 2 + 30, tempH - 47);
+			g.drawString("space", tempW / 2 - 136, tempH - 47);
 		}
 	}
 
@@ -305,7 +320,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		
+
 		if (currentstate == menustate) {
 			if (e.getX() > startX && e.getX() < startX + boxW && e.getY() > startY + adjustment
 					&& e.getY() < startY + boxH + adjustment) {
@@ -416,12 +431,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 
 			}
 		} else if (currentstate == gamestate) {
-			Date currentTime = new Date();
-			if (currentTime.getTime() - projectileTime.getTime() >= shootTime) {
-				om.createProjectile();
-				projectileTime = currentTime;
-				om.random = new Random();
-			}
+
 		} else if (currentstate == endstate) {
 			if (e.getX() > menuX && e.getX() < menuX + boxW && e.getY() > menuY + adjustment
 					&& e.getY() < menuY + boxH + adjustment) {
@@ -433,24 +443,21 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-	
 
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-	
 
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-	
 
 	}
 }

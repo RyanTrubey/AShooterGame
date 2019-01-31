@@ -116,16 +116,10 @@ public class ObjectManager {
 				player.y= -25;
 			}
 		}
-		if(direction.equals("fast")) {
-			player.y+=50;
-			if(player.y > GamePanel.tempH-50) {
-				player.y= -25;
-			}
-		}
 		if (direction.equals("left") && player.x > 0) {
 			player.x -= playerspeed;
 		}
-		if (direction.equals("right") && player.x < GamePanel.tempH-50) {
+		if (direction.equals("right") && player.x < GamePanel.tempW-50) {
 			player.x += playerspeed;
 		}
 		player.updateColBox();
